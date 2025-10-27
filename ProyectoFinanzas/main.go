@@ -105,7 +105,7 @@ func updateMov(w http.ResponseWriter, r *http.Request, id int, queries *sqlc.Que
 func deleteMov(w http.ResponseWriter, r *http.Request, id int, queries *sqlc.Queries) {
 	err := queries.DeleteMovimiento(r.Context(), int32(id))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusNoContent)
 		return
 	}
 }
