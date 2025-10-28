@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const idUsuario = 1; 
 
         // 5. Validaciones básicas
-        if (!tipo || !fechaMovimiento) {
+        if (!fechaMovimiento) {
             alert('Tipo es obligatorio y Fecha son obligatorios');
             return;
         }
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const responseText = await response.text();
             console.log('Status:', response.status, 'Respuesta:', responseText);
-            
+
             if (response.ok) {
                 alert('¡Creación de Movimiento con Éxito!');
                 form.reset();

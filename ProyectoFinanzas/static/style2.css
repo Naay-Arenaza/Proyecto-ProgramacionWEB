@@ -1,0 +1,104 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6; /* Un gris muy claro para el fondo */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido horizontalmente */
+}
+
+/* --- Título Principal --- */
+#main-title {
+    color: #2c3e50; /* Un azul oscuro/grisáceo */
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* --- Contenedor del Formulario --- */
+/* Usamos el ID del formulario para estilizar su contenedor */
+#form-movimiento {
+    background-color: #ffffff; /* Fondo blanco para el formulario */
+    padding: 30px;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+    width: 100%;
+    max-width: 2000px; /* Ancho máximo para el formulario */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* --- Estilos de los divs internos del formulario --- */
+#form-movimiento div {
+    margin-bottom: 20px; /* Espacio entre cada campo del formulario */
+}
+
+/* --- Etiquetas (Labels) --- */
+label {
+    display: block; /* Hace que la etiqueta ocupe su propia línea */
+    margin-bottom: 8px;
+    font-weight: 600; /* Texto en negrita ligera */
+    color: #555;
+}
+
+/* --- Campos de Entrada (Inputs) y Selección (Select) --- */
+input[type="number"],
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%; /* Ocupan todo el ancho del contenedor */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Importante para que el padding no rompa el diseño */
+    font-size: 1rem;
+    color: #333;
+}
+
+/* --- Estilo al enfocar un campo (Focus) --- */
+input:focus,
+select:focus {
+    border-color: #28a745; /* Borde verde al seleccionar */
+    outline: none; /* Quita el borde azul por defecto de Chrome */
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); /* Sombra verde sutil */
+}
+
+/* --- Botón de Envío --- */
+button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745; /* Verde para la acción de "Crear" */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Transición suave */
+}
+
+/* --- Efecto Hover del Botón --- */
+button[type="submit"]:hover {
+    background-color: #218838; /* Un verde más oscuro al pasar el mouse */
+}
+
+button[type="submit"]:active {
+    transform: scale(0.99); /* Efecto de clic */
+}
+
+/* --- Contenedor de Movimientos (Resultados) --- */
+#contenedor_movimientos {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 2000px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
