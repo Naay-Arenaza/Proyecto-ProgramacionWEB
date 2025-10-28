@@ -6,6 +6,8 @@ DB_URL="postgres://postgres:12345@localhost:5432/proyectos?sslmode=disable"
 all: build
 # Inicia el servidor de desarrollo con recarga en vivo
 run: docker/up 
+	@echo ">= Instalando Air..."
+	@go install github.com/air-verse/air@latest
 	@echo ">= Base de datos lista. Iniciando Air..."
 	@air
 # Genera código SQLC y Templ
