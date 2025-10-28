@@ -106,6 +106,40 @@ func (q *Queries) ListMovimiento(ctx context.Context, idUsuario int32) ([]Movimi
 	return items, nil
 }
 
+const listMovimientoAll = `-- name: ListMovimientoAll :many
+SELECT id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento FROM Movimiento ORDER BY fecha_movimiento DESC
+`
+
+func (q *Queries) ListMovimientoAll(ctx context.Context) ([]Movimiento, error) {
+	rows, err := q.db.QueryContext(ctx, listMovimientoAll)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Movimiento
+	for rows.Next() {
+		var i Movimiento
+		if err := rows.Scan(
+			&i.IDMovimiento,
+			&i.IDUsuario,
+			&i.Monto,
+			&i.Tipo,
+			&i.Descripcion,
+			&i.FechaMovimiento,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateMovimiento = `-- name: UpdateMovimiento :one
 UPDATE Movimiento SET monto = $2, tipo = $3, descripcion = $4, fecha_movimiento = $5 WHERE id_movimiento = $1
 RETURNING id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento

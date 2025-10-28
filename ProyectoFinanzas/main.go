@@ -1,19 +1,21 @@
 package main
 
 import (
+	sqlc "ProyectoFinanzas/db/sqlc"
+	"ProyectoFinanzas/logic"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-
-	sqlc "ProyectoFinanzas/db/sqlc"
+	"strconv"
+	"strings"
 
 	_ "github.com/lib/pq"
 )
 
-type QueriesStruct struct {
-	queries *sqlc.Queries
+type QLogic struct {
+	movCapaLogica *logic.MovCapaLogica
 }
 
 func main() {
@@ -25,8 +27,12 @@ func main() {
 	}
 	defer db.Close() //Cerrar conexion
 
-	queries := &QueriesStruct{
-		queries: sqlc.New(db),
+	queries := sqlc.New(db)
+
+	movLogic := logic.NewMovimientoLogic(queries)
+
+	qLogic := &QLogic{
+		movCapaLogica: movLogic,
 	}
 
 	//Abrir el servidor
@@ -36,8 +42,8 @@ func main() {
 
 	http.HandleFunc("/", serveForm)
 
-	http.HandleFunc("/movimientos", queries.movimientosHandler)
-	//http.HandleFunc("/movimientos/", queries.movimientoHandler)
+	http.HandleFunc("/movimientos", qLogic.movimientosHandler)
+	http.HandleFunc("/movimientos/", qLogic.movimientoHandler)
 
 	port := ":8080"
 	fmt.Printf("Servidor ESTÁTICO escuchando en http://localhost%s\n", port)
@@ -61,7 +67,8 @@ func serveForm(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/index.html")
 }
 
-func (q *QueriesStruct) movimientosHandler(w http.ResponseWriter, r *http.Request) {
+// //////// ->  /movimientos
+func (q *QLogic) movimientosHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		q.getMovimientos(w, r)
@@ -73,10 +80,12 @@ func (q *QueriesStruct) movimientosHandler(w http.ResponseWriter, r *http.Reques
 }
 
 // GET /movimientos - Listar todos los movimientos
-func (q *QueriesStruct) getMovimientos(w http.ResponseWriter, r *http.Request) {
+//
+//	Listamos todos los movimiento que haya en la BD, hasta saber como verificar el usuario
+func (q *QLogic) getMovimientos(w http.ResponseWriter, r *http.Request) {
 	var movimientos = []sqlc.Movimiento{}
 
-	movimientos, err := q.queries.ListMovimiento(r.Context(), 1)
+	movimientos, err := q.movCapaLogica.ListMovimientoAllLogic(r.Context())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError) //Error 500
@@ -88,7 +97,7 @@ func (q *QueriesStruct) getMovimientos(w http.ResponseWriter, r *http.Request) {
 }
 
 // POST /movimientos - Crear nuevo movimiento
-func (q *QueriesStruct) createMovimiento(w http.ResponseWriter, r *http.Request) {
+func (q *QLogic) createMovimiento(w http.ResponseWriter, r *http.Request) {
 	var newMovimiento sqlc.CreateMovimientoParams
 
 	err := json.NewDecoder(r.Body).Decode(&newMovimiento) //Decodifica el producto en formato JSON del cuerpo de la peticion
@@ -98,7 +107,7 @@ func (q *QueriesStruct) createMovimiento(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	movimiento, err1 := q.queries.CreateMovimiento(r.Context(), newMovimiento)
+	movimiento, err1 := q.movCapaLogica.CreateMovimientoLogic(r.Context(), newMovimiento)
 
 	if err1 != nil {
 		http.Error(w, err1.Error(), http.StatusBadRequest)
@@ -109,4 +118,75 @@ func (q *QueriesStruct) createMovimiento(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) //Codigo de estado http.StatusCreated(201)
 	json.NewEncoder(w).Encode(movimiento)
+}
+
+// //////// ->  /movimientos/
+func (q *QLogic) movimientoHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("ID recibido: ")
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) != 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(parts[2])
+	log.Printf("ID recibido: %d", id)
+	if err != nil {
+		http.Error(w, "Id de movimiento invalido", http.StatusBadRequest)
+		return
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		q.getMov(w, r, id)
+	case http.MethodPut:
+		q.updateMov(w, r, id)
+	case http.MethodDelete:
+		q.deleteMov(w, r, id)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+// GET /movimientos/ - Listar movimiento
+func (q *QLogic) getMov(w http.ResponseWriter, r *http.Request, id int) {
+	movimiento, err := q.movCapaLogica.GetMovimientoLogic(r.Context(), int32(id))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(movimiento)
+}
+
+// PUT /movimientos/ - Actualizar movimiento
+func (q *QLogic) updateMov(w http.ResponseWriter, r *http.Request, id int) {
+	log.Printf("ID recibido: %d", id)
+	var aux sqlc.UpdateMovimientoParams
+	var mov sqlc.Movimiento
+	err := json.NewDecoder(r.Body).Decode(&aux)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	log.Printf("ID recibido: %d", id)
+	log.Printf("Datos recibidos: %+v", aux)
+	aux.IDMovimiento = int32(id)
+	mov, err = q.movCapaLogica.UpdateMovimientoLogic(r.Context(), aux)
+	log.Printf("Datos para update: %+v", mov)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(mov)
+}
+
+// POST /movimientos/ - Eliminar movimiento
+func (q *QLogic) deleteMov(w http.ResponseWriter, r *http.Request, id int) {
+	err := q.movCapaLogica.DeleteMovimientoLogic(r.Context(), int32(id))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNoContent)
+		return
+	}
 }
