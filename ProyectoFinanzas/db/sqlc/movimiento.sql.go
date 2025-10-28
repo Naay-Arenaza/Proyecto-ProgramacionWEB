@@ -107,7 +107,7 @@ func (q *Queries) ListMovimiento(ctx context.Context, idUsuario int32) ([]Movimi
 }
 
 const listMovimientoAll = `-- name: ListMovimientoAll :many
-SELECT id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento FROM Movimiento ORDER BY fecha_movimiento DESC
+SELECT id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento FROM Movimiento ORDER BY fecha_movimiento ASC
 `
 
 func (q *Queries) ListMovimientoAll(ctx context.Context) ([]Movimiento, error) {

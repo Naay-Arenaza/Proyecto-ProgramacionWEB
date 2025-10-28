@@ -1,0 +1,151 @@
+#form-movimiento label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+#form-movimiento input[type="text"],
+#form-movimiento input[type="date"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box; /* Importante para el padding */
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#form-movimiento input[type="text"]:focus,
+#form-movimiento input[type="date"]:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* Re-agregando los labels que quité del HTML pero que deberían estar */
+/* Si prefieres no usar labels, puedes eliminar este bloque y el siguiente */
+/* Para que esto funcione, deberías cambiar tu HTML a:
+   <div>
+       <label for="monto_mov">Monto:</label>
+       <input type="number" name="monto" id="monto_mov">
+   </div>
+   ... etc ...
+*/
+
+/* Si decides mantener el HTML original (sin labels), 
+   puedes usar placeholders y estilizar los inputs directamente */
+#form-movimiento input {
+    display: block;
+    width: 100%;
+    margin-bottom: 1.25rem; /* Espacio entre inputs */
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#form-movimiento select {
+    display: block;
+    width: 100%;
+    margin-bottom: 1.25rem; /* Espacio entre inputs */
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#form-movimiento input:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+
+/* Botón de envío */
+#form-movimiento button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #007aff, #005a9c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 1rem;
+}
+
+#form-movimiento button[type="submit"]:hover {
+    background: linear-gradient(135deg, #006ee6, #004f8a);
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+#form-movimiento button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 122, 255, 0.2);
+}
+
+/* Contenedor de movimientos */
+#contenedor_movimientos {
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 700px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+/* Estilos para movimientos individuales (ejemplo) */
+.movimiento {
+    border-bottom: 1px solid #eee;
+    padding: 1.2rem 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.movimiento:last-child {
+    border-bottom: none;
+}
+
+.movimiento .descripcion {
+    font-weight: 600;
+}
+
+.movimiento .monto.ingreso {
+    color: #28a745; /* Verde para ingresos */
+    font-weight: 700;
+}
+
+.movimiento .monto.gasto {
+    color: #dc3545; /* Rojo para gastos */
+    font-weight: 700;
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+
+    #main-title {
+        font-size: 2rem;
+    }
+
+    #form-movimiento {
+        padding: 1.5rem;
+    }
+
+    #contenedor_movimientos {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+}

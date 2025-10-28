@@ -10,7 +10,7 @@ SELECT * FROM Movimiento WHERE id_movimiento = $1;
 SELECT * FROM Movimiento WHERE id_usuario = $1 ORDER BY fecha_movimiento DESC;
 
 -- name: ListMovimientoAll :many
-SELECT * FROM Movimiento ORDER BY fecha_movimiento DESC;
+SELECT * FROM Movimiento ORDER BY fecha_movimiento ASC;
 
 -- name: UpdateMovimiento :one
 UPDATE Movimiento SET monto = $2, tipo = $3, descripcion = $4, fecha_movimiento = $5 WHERE id_movimiento = $1

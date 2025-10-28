@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Control de Finanzas</title>
-    </head> 
-    <body>
-        <h1>Control de Gastos e Ingresos</h1>
-            <p>
-                ¡Bienvenido a tu centro de control financiero! Esta pagina WEB te ayudará a llevar un seguimiento claro y sencillo de tus gastos e 
-                ingresos.
-                <br>
-                Registra cada movimiento, analiza tus hábitos de consumo con reportes mensuales y toma el control de tus finanzas personales.
-                Además, podrás agregar, ver, editar y eliminar cada uno de tus movimientos de forma fácil y rápida.
-            </p>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Movimiento</title>
+</head>
+<body>
+    <h1 id="main-title">Agregar movimiento</h1>
+
+
+    <div>
+        <form id="form-movimiento">
+            <div>
+                <label for="monto_mov">Monto:</label>
+                <input type="number" name="monto" id="monto_mov">
+            </div>
+            <label for="Tipo" id="tipo_mov">Tipo:</label>
+            <select name="Tipo">
+            <option value="E">Egreso</option>
+            <option value="I">Ingreso</option>
+            </select><br>
+            Descripcion: <input type="text" name="descripcion" id="descripcion_mov"><br>
+            FechaMovimiento: <input type="date" name="fechaMovimiento" id="fechaMovimiento"><br>
+            <button type="submit">Crear</button>
+        </form>
+    </div>
+
+    <div id="contenedor_movimientos">
+        </div>
+    <script src="/static/app.js"></script>
+</body>
 </html>

@@ -1,0 +1,11 @@
+root = "."
+tmp_dir = "tmp"
+[build]
+cmd = "make build"
+
+bin = "my-app"
+full_bin = "APP_ENV=dev APP_USER=air ./my-app"
+include_ext = ["go", "templ", "sql"]
+exclude_dir = ["tmp", "vendor", "db/sqlc", "db/migrations", "db/schema", "static"]
+[run]
+skip_init = true
