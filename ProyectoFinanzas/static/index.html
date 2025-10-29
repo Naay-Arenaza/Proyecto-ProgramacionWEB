@@ -1,17 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Control de Finanzas</title>
-    </head> 
-    <body>
-        <h1>Control de Gastos e Ingresos</h1>
-            <p>
-                ¡Bienvenido a tu centro de control financiero! Esta pagina WEB te ayudará a llevar un seguimiento claro y sencillo de tus gastos e 
-                ingresos.
-                <br>
-                Registra cada movimiento, analiza tus hábitos de consumo con reportes mensuales y toma el control de tus finanzas personales.
-                Además, podrás agregar, ver, editar y eliminar cada uno de tus movimientos de forma fácil y rápida.
-            </p>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimientos</title>
+</head>
+<body>
+
+
+    <h1 id="main-title"> Tus Movimientos </h1>
+    <h2>Registrar Movimiento</h2>
+
+    <div>
+        <form id="form-movimiento">
+            
+            <div>
+                <label for="monto_mov">Monto:</label>
+                <input type="number" step="any" name="monto" id="monto_mov" placeholder="Ej: 150.50">
+            </div>
+        <br>
+            <div>
+                <label for="tipo_mov">Tipo de movimiento:</label>
+                <select id="tipo" name="tipo_mov" required>
+                <option value="">Seleccionar...</option>
+                <option value="I">Ingreso</option>
+                <option value="G">Gasto</option>
+                </select>
+            </div>
+        <br>
+            <div>
+                <label for="descripcion_mov">Descripción:</label>
+                <input type="text" name="descripcion" id="descripcion_mov" placeholder="Ej: Compra supermercado">
+            </div>
+        <br>   
+            <div>
+                <label for="fechaMovimiento">Fecha de Movimiento:</label>
+                <input type="date" name="fechaMovimiento" id="fechaMovimiento">
+            </div>
+        <br>     
+            <div>
+                <button type="submit">Crear</button>
+            </div>
+        </form>
+    </div>
+        <br>
+    <h2>Listado de Movimientos</h2>
+    <div id="lista_movimientos">
+          
+    </div>
+    <script src="/static/app.js"></script>
+</body>
 </html>
