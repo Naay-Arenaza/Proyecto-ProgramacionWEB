@@ -29,7 +29,7 @@ body {
     border-radius: 8px; /* Bordes redondeados */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil */
     width: 100%;
-    max-width: 2000px; /* Ancho máximo para el formulario */
+    max-width: 700px; /* Ancho máximo para el formulario */
     box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
@@ -95,7 +95,7 @@ button[type="submit"]:active {
 #contenedor_movimientos {
     margin-top: 30px;
     width: 100%;
-    max-width: 2000px;
+    max-width: 700px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
