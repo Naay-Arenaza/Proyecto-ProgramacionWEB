@@ -1,3 +1,4 @@
+const API_URL = "/movimientos";
 async function handleFormSubmitMov(event){
     event.preventDefault(); // no se si va porque quite el action
     const form = event.currentTarget; // obtiene el form que disparo el evento
@@ -64,16 +65,93 @@ async function handleFormSubmitMov(event){
     }
 }
 
+async function cargarMovimientos() {
+    try {
+        console.log("Cargando movimientos desde el servidor...");
+        
+        const respuesta = await fetch(API_URL);
+        
+        if (!respuesta.ok) {
+            throw new Error('Error al cargar movimientos');
+        }
+        
+        const movimientos = await respuesta.json();
+        console.log("MOVIMIENTOS RECIBIDOS:", movimientos);
+        
+        mostrarMovimientos(movimientos);
+        
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById('lista_movimientos').innerHTML = `
+            <div class="error">Error al cargar los movimientos: ${error.message}</div>
+        `;
+    }
+}
+function mostrarMovimientos(movimientos) {
+    const lista = document.getElementById('lista_movimientos');
+    
+    if (!movimientos || movimientos.length === 0) {
+        lista.innerHTML = '<div class="no-movimientos">No hay movimientos registrados</div>';
+        return;
+    }
+    
+    const html = movimientos.map(mov => crearHTMLMovimiento(mov)).join('');
+    lista.innerHTML = html; // innerHTML muestra el
+}
+function crearHTMLMovimiento(mov) {
+        // va viendo si es ingreso o gasto y en base a eso guarda el valor para desp rellenar
+        const esIngreso = mov.tipo === 'I';
+        const simbolo = esIngreso ? '+' : '-';
+        const clase = esIngreso ? 'ingreso' : 'gasto';
+        const texto = esIngreso ? 'INGRESO' : 'GASTO';
+        
+        // Obtener descripción - varias formas por si la estructura cambia
+        let descripcion = mov.descripcion?.String || 'Sin descripción';
+        
+        let fechaFormateada = 'Fecha no disponible';
+        if (mov.fecha_movimiento) {
+            try {
+                const fechaISO = mov.fecha_movimiento; // "2025-10-29T00:00:00Z"
+                const [fechaPart] = fechaISO.split('T'); // "2025-10-29"
+                const [anio, mes, dia] = fechaPart.split('-');
+                fechaFormateada = `${dia}/${mes}/${anio}`; // "29/10/2025"
+                
+                console.log(`Fecha original: ${fechaISO} -> Formateada: ${fechaFormateada}`); 
+                
+            } catch (e) {
+                console.error('Error formateando fecha:', e);
+            }
+        }
+        
+        return `
+            <div class="movimiento-${clase}-flex">
+                 <div class="movimiento-detalles">
+                    ID_Movimiento: ${mov.id_movimiento} <br> 
+                    Tipo de Gasto: ${texto}
+                </div>
+                <div class="movimiento-header">
+                    <span class="fecha">Fecha: ${fechaFormateada}</span>
+                    <br>
+                    <span class="descripcion">Descripcion: ${descripcion}</span>
+                    <br>
+                    <span class="monto ${clase}">Monto: ${simbolo}$${mov.monto}</span>
+                </div>
+                <button class="borrar_mov">Borrar</button>
+            </div>
+        `;
+}
+
 //Espera a que todo el HTML esté cargado y evita errores al intentar seleccionar elementos que aún no existen
 document.addEventListener('DOMContentLoaded', () => {
 
     // Selecciona el formulario
     const form = document.getElementById('form-movimiento');
-
-    // Escucha el evento 'submit' del formulario
+    cargarMovimientos();
+    // si es null --> no existe form, js evalua false con null
     if (form) {
-        form.addEventListener('submit', handleFormSubmitMov);
-    }
+        form.addEventListener('submit', handleFormSubmitMov); // Escucha el evento 'submit' del formulario
 
+    }
+    
 
 });
