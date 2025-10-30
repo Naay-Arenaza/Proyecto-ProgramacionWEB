@@ -135,6 +135,7 @@ function crearHTMLMovimiento(mov) {
                     <span class="descripcion">Descripcion: ${descripcion}</span>
                     <br>
                     <span class="monto ${clase}">Monto: ${simbolo}$${mov.monto}</span>
+                    <br>
                     <button class="btn-borrar">Borrar</button>
                 </div>
             </div>

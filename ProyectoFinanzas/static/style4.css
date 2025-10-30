@@ -10,32 +10,35 @@
     "sidebar content";
     height: 100vh; /* Cambia a altura completa de la ventana */
     min-height: 100vh; /* Mínimo alto de ventana */
-    background-color: #f9f9f9;
-    border: 1px solid #ffffff;
+    background-color: #93aa94;
     padding: 10px; /* Agrega padding para respiro */
     overflow: hidden; /* Previene scroll general */
 }
 /*elementos del grid*/
 .item-grid { 
-    background-color: #e0f7fa;
+    background-color: #c8e6c9;
     padding: 15px;
-    border: 1px solid #00bcd4;
+
 }
 .header {
     grid-area: header;
-    background-color: #b3e5fc;
+    background-color: #93aa94;
 }
 .sidebar {
     grid-area: sidebar;
     background-color: #c8e6c9;
+    border: 3px solid rgb(0, 0, 0);
+    border-radius:1cm
 }
 .content {
     grid-area: content;
-    background-color: #ffccbc;
+    background-color: #d3e4d4;
     display: flex;
     flex-direction: column;
     height: 100%; /* Ocupa toda la altura disponible */
     min-height: 0; /* IMPORTANTE: permite que el contenido se expanda */
+    border: 3px solid black;
+    border-radius:1cm
 }
 
 #titulo-crear-movimiento{
@@ -72,6 +75,10 @@
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
+}
+/* Oscurecer al pasar el mouse por encima */
+.boton-crear-movimiento:hover {
+    background-color: #218838;
 }
 
 /* Flex para las listas  */
@@ -130,7 +137,7 @@
     font-size: 14px;
 }
 
-/* Estilos para cada movimiento individual */
+
 .movimiento-ingreso-flex,
 .movimiento-gasto-flex {
     flex: 0 0 calc(33.333% - 80px); /* 3 columnas con espacio */
@@ -146,14 +153,14 @@
 }
 
 .movimiento-ingreso-flex {
-    background-color: lightblue;
+    background-color: rgba(0, 126, 6, 0.39);
     padding: 20px;
     margin: 5px;
-    border: 1px solid blue;
+    border: 3px solid rgb(0, 126, 6);
 }
 .movimiento-gasto-flex {
-    background-color: lightblue;
+    background-color: rgba(223, 26, 0, 0.37);
     padding: 20px;
     margin: 5px;
-    border: 1px solid rgb(255, 30, 0);
+    border: 3px solid rgba(223, 26, 0, 0.815);
 }
