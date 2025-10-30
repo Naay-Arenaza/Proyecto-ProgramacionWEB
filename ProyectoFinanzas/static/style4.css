@@ -1,124 +1,124 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Fondo más claro y moderno */
+}
 .contenedor-grid {
-    display: grid; /* Convierte el div en un contenedor grid */
-    /* Columna izquierda 1 parte, derecha 3 partes */
+    display: grid;
     grid-template-columns: 1fr 3fr; 
-    /* Fila de arriba auto, medio 1 parte, abajo auto */
     grid-template-rows: auto 1fr;
-    gap: 10px; /* Espacio de 10px entre celdas */
+    gap: 15px; /* Espacio ligeramente mayor */
     grid-template-areas:
     "header header"
     "sidebar content";
-    height: 100vh; /* Cambia a altura completa de la ventana */
-    min-height: 100vh; /* Mínimo alto de ventana */
-    background-color: #93aa94;
-    padding: 10px; /* Agrega padding para respiro */
-    overflow: hidden; /* Previene scroll general */
+    height: 100vh;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a3d5ff 0%, #d1ecff 100%);
+    padding: 15px;
+    overflow: hidden;
 }
 /*elementos del grid*/
 .item-grid { 
-    background-color: #c8e6c9;
+    background-color: #ffffff;
     padding: 15px;
-
 }
 .header {
     grid-area: header;
-    background-color: #93aa94;
+    background: linear-gradient(135deg, #a3d5ff 0%, #d1ecff 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 .sidebar {
     grid-area: sidebar;
-    background-color: #c8e6c9;
-    border: 3px solid rgb(0, 0, 0);
-    border-radius:1cm
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 .content {
     grid-area: content;
-    background-color: #d3e4d4;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     display: flex;
     flex-direction: column;
-    height: 100%; /* Ocupa toda la altura disponible */
-    min-height: 0; /* IMPORTANTE: permite que el contenido se expanda */
-    border: 3px solid black;
-    border-radius:1cm
+    height: 100%;
+    min-height: 0;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 #titulo-crear-movimiento{
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    color: #495057;
+    width: 100%;
 }
 
 #main-title{
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    color: white; /* Texto blanco para contrastar con el gradiente */
+    width: 100%;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 #titulo-listado-movimientos{
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
-    font: 'Segoe UI';
+    color: #495057;
+    width: 100%;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 
 /* BOTÓN DE ENVÍO */
 .boton-crear-movimiento {
-    background-color: #28a745;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
     color: white;
     padding: 12px 20px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+    transition: all 0.3s ease;
 }
-/* Oscurecer al pasar el mouse por encima */
 .boton-crear-movimiento:hover {
-    background-color: #218838;
+    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+    transform: translateY(-1px);
 }
 
-/* Flex para las listas  */
 #lista_movimientos {
     display: flex;
-    flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea */
-    gap: 15px; /* Espacio entre movimientos */
+    flex-wrap: wrap;
+    gap: 15px;
     align-items: flex-start;
-    justify-content: center; /* Centra los grupos de 3 elementos */
+    justify-content: center;
     padding: 10px;
-    overflow-y: auto; /* Scroll si hay muchos movimientos */
+    overflow-y: auto;
     flex-grow: 1;
-    min-height: 0; /* IMPORTANTE: permite el scroll */
-    max-height: calc(100vh - 200px); /* Altura máxima calculada */
+    min-height: 0;
+    max-height: calc(100vh - 200px);
 }
 
-#form-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 25px;
-    margin: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e1e5e9;
-    width: 90%; /* Ajusta al ancho del sidebar */
-    max-width: 400px; /* Ancho máximo */
-}
 .form-input {
     padding: 10px 12px;
-    border: 2px solid #e1e5e9;
-    border-radius: 6px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
     font-size: 14px;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
 }
-/* efecto de focus a la hora de estar interactuando con un input */
 .form-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background-color: white;
 }
-/* ESTILO ESPECÍFICO PARA SELECT */
+
 #tipo_mov {
     background-color: white;
     cursor: pointer;
@@ -133,34 +133,42 @@
 .form-group label {
     font-weight: 600;
     margin-bottom: 5px;
-    color: #333;
+    color: #495057;
     font-size: 14px;
 }
 
 
 .movimiento-ingreso-flex,
 .movimiento-gasto-flex {
-    flex: 0 0 calc(33.333% - 80px); /* 3 columnas con espacio */
-    min-width: 250px; /* Ancho mínimo */
+    flex: 0 0 calc(33.333% - 80px);
+    min-width: 250px;
     padding: 15px;
     margin: 5px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-    display: flex;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    display: flex;  
     flex-direction: column;
     justify-content: space-between;
-    font-family: 'Lucida Console', monospace;
+    font-family: 'Segoe UI', sans-serif;
+    transition: transform 0.2s ease;
+}
+
+.movimiento-ingreso-flex:hover,
+.movimiento-gasto-flex:hover {
+    transform: translateY(-2px);
 }
 
 .movimiento-ingreso-flex {
-    background-color: rgba(0, 126, 6, 0.39);
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
     padding: 20px;
     margin: 5px;
-    border: 3px solid rgb(0, 126, 6);
+    border: 2px solid #28a745;
+    color: #155724;
 }
 .movimiento-gasto-flex {
-    background-color: rgba(223, 26, 0, 0.37);
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
     padding: 20px;
     margin: 5px;
-    border: 3px solid rgba(223, 26, 0, 0.815);
+    border: 2px solid #dc3545;
+    color: #721c24;
 }
