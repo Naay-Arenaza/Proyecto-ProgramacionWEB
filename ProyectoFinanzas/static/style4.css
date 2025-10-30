@@ -3,17 +3,17 @@
     /* Columna izquierda 1 parte, derecha 3 partes */
     grid-template-columns: 1fr 3fr; 
     /* Fila de arriba auto, medio 1 parte, abajo auto */
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr;
     gap: 10px; /* Espacio de 10px entre celdas */
     grid-template-areas:
     "header header"
-    "sidebar content"
-    "footer footer"; /* Define áreas con nombres */
+    "sidebar content";
     height: 100vh; /* Cambia a altura completa de la ventana */
     min-height: 100vh; /* Mínimo alto de ventana */
     background-color: #f9f9f9;
     border: 1px solid #ffffff;
     padding: 10px; /* Agrega padding para respiro */
+    overflow: hidden; /* Previene scroll general */
 }
 /*elementos del grid*/
 .item-grid { 
@@ -32,10 +32,10 @@
 .content {
     grid-area: content;
     background-color: #ffccbc;
-}
-.footer {
-    grid-area: footer;
-    background-color: #ffe0b2;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ocupa toda la altura disponible */
+    min-height: 0; /* IMPORTANTE: permite que el contenido se expanda */
 }
 
 #titulo-crear-movimiento{
@@ -60,16 +60,32 @@
     font: 'Segoe UI';
 }
 
+
+/* BOTÓN DE ENVÍO */
+.boton-crear-movimiento {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
 /* Flex para las listas  */
 #lista_movimientos {
     display: flex;
     flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea */
     gap: 15px; /* Espacio entre movimientos */
-    justify-content: flex-start; /* Alinea a la izquierda */
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: center; /* Centra los grupos de 3 elementos */
     padding: 10px;
     overflow-y: auto; /* Scroll si hay muchos movimientos */
+    flex-grow: 1;
+    min-height: 0; /* IMPORTANTE: permite el scroll */
+    max-height: calc(100vh - 200px); /* Altura máxima calculada */
 }
 
 #form-card {
@@ -95,11 +111,17 @@
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
+/* ESTILO ESPECÍFICO PARA SELECT */
+#tipo_mov {
+    background-color: white;
+    cursor: pointer;
+}
 
 .form-group {
     display: flex;
     flex-direction: column;
     text-align: left;
+    margin: 12px 20px;
 }
 .form-group label {
     font-weight: 600;

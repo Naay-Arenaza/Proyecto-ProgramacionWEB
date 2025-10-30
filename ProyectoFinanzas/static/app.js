@@ -53,6 +53,8 @@ async function handleFormSubmitMov(event){
 
         if (response.ok) {
             alert('¡Creación de Movimiento con Éxito!');
+            // actualiza movimiento despues de agregar un movimiento nuevo
+            cargarMovimientos();
             form.reset(); // Limpia el formulario
         } else {
             alert(`Error ${response.status}: ${responseText}`); // error en el servidor (DENTRO)
@@ -125,18 +127,16 @@ function crearHTMLMovimiento(mov) {
         
         return `
             <div class="movimiento-${clase}-flex">
-                 <div class="movimiento-detalles">
-                    ID_Movimiento: ${mov.id_movimiento} <br> 
-                    Tipo de Gasto: ${texto}
-                </div>
-                <div class="movimiento-header">
+                <div class="movimiento-detalles">
+                    <span class="ID">ID_Movimiento: ${mov.id_movimiento}</span> <br> 
+                    <span class="gasto">Tipo de Gasto: ${texto}</span>
                     <span class="fecha">Fecha: ${fechaFormateada}</span>
                     <br>
                     <span class="descripcion">Descripcion: ${descripcion}</span>
                     <br>
                     <span class="monto ${clase}">Monto: ${simbolo}$${mov.monto}</span>
+                    <button class="btn-borrar">Borrar</button>
                 </div>
-                <button class="borrar_mov">Borrar</button>
             </div>
         `;
 }
