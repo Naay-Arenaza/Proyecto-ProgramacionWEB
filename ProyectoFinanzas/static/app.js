@@ -1,19 +1,25 @@
-const API_URL = "http://localhost:8080/movimientos";
+const API_URL = "/movimientos"; // URL API (endpoint del servidor)
 
-// Cuando la página carga
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() { // DOMContentLoaded -> Espera que el HTML este completamente cargado
     console.log("Página cargada - Iniciando aplicación");
-    cargarMovimientos();
-    
-    // Escuchar cuando se envía el formulario
-    document.getElementById('form-movimiento').addEventListener('submit', agregarMovimiento);
+    cargarMovimientos(); // Carga todos los movimientos existentes
+
+    document.getElementById('form-movimiento').addEventListener('submit', agregarMovimiento); //Prepara el formulario para cuando el usuario mande datos
+
+    document.addEventListener('click', function(e) { // Escucha todos los clicks que se hagan en la pagina
+        if (e.target.classList.contains('btn-borrar')) { // Solo se ejecuta si el elemento que se clickeo tiene la clase "btn-borrar"
+            const id = e.target.getAttribute('data-id'); // Lee el valor del atributo data-id del boton
+            console.log("ID del movimiento a borrar:", id);
+            borrarMovimiento(id);
+        }
+    });
 });
-// Función para cargar y mostrar los movimientos
-async function cargarMovimientos() {
+
+async function cargarMovimientos() { // async y await -> Esperan la respuesta del servidor sin bloquear la pag.
     try {
         console.log("Cargando movimientos desde el servidor...");
         
-        const respuesta = await fetch(API_URL);
+        const respuesta = await fetch(API_URL); // Peticion de GET al servidor
         
         if (!respuesta.ok) {
             throw new Error('Error al cargar movimientos');
@@ -24,7 +30,7 @@ async function cargarMovimientos() {
         
         mostrarMovimientos(movimientos);
         
-    } catch (error) {
+    } catch (error) { // Manejo de errores & mensaje a usuario
         console.error("Error:", error);
         document.getElementById('lista_movimientos').innerHTML = `
             <div class="error">Error al cargar los movimientos: ${error.message}</div>
@@ -32,26 +38,26 @@ async function cargarMovimientos() {
     }
 }
 
-function crearHTMLMovimiento(mov) {
+function mostrarMovimientos(movimientos) { // Muestra los movimientos 
+    const lista = document.getElementById('lista_movimientos');
+
+    if (!movimientos || movimientos.length === 0) {
+        lista.innerHTML = '<div class="no-movimientos">No hay movimientos registrados</div>';
+        return;
+    }
+    
+    const html = movimientos.map(mov => crearHTMLMovimiento(mov)).join(''); 
+    lista.innerHTML = html;
+}
+
+function crearHTMLMovimiento(mov) { //Crear el HTML de cada movimiento
         const esIngreso = mov.tipo === 'I';
         const simbolo = esIngreso ? '+' : '-';
         const clase = esIngreso ? 'ingreso' : 'gasto';
         const texto = esIngreso ? 'INGRESO' : 'GASTO';
-        
-        // Obtener descripción - varias formas por si la estructura cambia
-        let descripcion = 'Sin descripción';
-        if (mov.descripcion) {
-            if (typeof mov.descripcion === 'string') {
-                descripcion = mov.descripcion;
-            } else if (mov.descripcion.String) {
-                descripcion = mov.descripcion.String;
-            } else if (mov.descripcion.string) {
-                descripcion = mov.descripcion.string;
-            } else if (mov.descripcion.descripcion) {
-                descripcion = mov.descripcion.descripcion;
-            }
-        }
-        
+
+        let descripcion = mov.descripcion?.String || 'Sin descripción';
+
         let fechaFormateada = 'Fecha no disponible';
         if (mov.fecha_movimiento) {
             try {
@@ -59,67 +65,72 @@ function crearHTMLMovimiento(mov) {
                 const [fechaPart] = fechaISO.split('T'); // "2025-10-29"
                 const [anio, mes, dia] = fechaPart.split('-');
                 fechaFormateada = `${dia}/${mes}/${anio}`; // "29/10/2025"
-                
-                console.log(`Fecha original: ${fechaISO} -> Formateada: ${fechaFormateada}`); 
-                
             } catch (e) {
                 console.error('Error formateando fecha:', e);
             }
-        }
-        
+        }    
         return `
-            <div class="movimiento ${clase}">
-                <div class="movimiento-header">
-                    <span class="fecha">Fecha: ${fechaFormateada}</span>
-                    <br>
-                    <span class="descripcion">Descripcion: ${descripcion}</span>
-                    <br>
-                    <span class="monto ${clase}">Monto: ${simbolo}$${mov.monto}</span>
-                </div>
+            <div class="movimiento-${clase}-flex">
                 <div class="movimiento-detalles">
-                    Tipo de Gasto: ${texto} | ID: ${mov.id_movimiento}
+                    <span class="ID"> ID: ${mov.id_movimiento}</span>
+                        <br>
+                    <span class="fecha"> Fecha: ${fechaFormateada}</span>
+                        <br>
+                    <span class="descripcion"> Descripcion: ${descripcion}</span>
+                        <br>
+                    <span class="monto ${clase}"> Monto: ${simbolo}$${mov.monto}</span>
+                        <br>
+                    <span class="gasto"> Tipo de Gasto: ${texto}</span>
                 </div>
                 <br>
-                </div>
-                        <button id="Borrar">Load Data</button>
-                </div>
+                    <button class="btn-borrar" data-id="${mov.id_movimiento}"> Eliminar </button>
                 <br><br>
             </div>
         `;
 }
 
-// Función para mostrar los movimientos en pantalla
-function mostrarMovimientos(movimientos) {
-    const lista = document.getElementById('lista_movimientos');
-    
-    if (!movimientos || movimientos.length === 0) {
-        lista.innerHTML = '<div class="no-movimientos">No hay movimientos registrados</div>';
+async function borrarMovimiento(idMovimiento) {// Funcion para borrar un movimiento de la lista de movimientos
+    if (!confirm('¿Estás seguro de que queres eliminar este movimiento?')) {
         return;
     }
-    
-    const html = movimientos.map(mov => crearHTMLMovimiento(mov)).join('');
-    lista.innerHTML = html;
+    try {
+        const id = parseInt(idMovimiento);
+        console.log(`Borrando movimiento ID: ${id}`);
+        
+        const respuesta = await fetch(`${API_URL}/${id}`, { // Elimina el movimiento del servidor
+            method: 'DELETE'
+        });
+        
+        if (respuesta.ok) {
+            alert('Movimiento eliminado correctamente');
+            cargarMovimientos(); // Recargamos la lista de movimientos
+        } else {
+            const errorTexto = await respuesta.text();
+            alert(`Error al eliminar movimiento: ${errorTexto}`);
+        }
+        
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        alert('Error de conexión con el servidor');
+    }
 }
 
-// Función para agregar nuevo movimiento
-async function agregarMovimiento(evento) {
+async function agregarMovimiento(evento) { // Funcion para agregar un movimiento
     evento.preventDefault(); // Evitar que se recargue la página
     
-    // Obtener valores del formulario
     const monto = document.getElementById('monto_mov').value;
-    const tipo = document.getElementById('tipo').value;
+    const tipo = document.getElementById('tipo_mov').value;
     const descripcionInput = document.getElementById('descripcion_mov').value;
     const fechaMovimiento = document.getElementById('fechaMovimiento').value;
-    
-    // Validar campos obligatorios
-    if (!monto || !tipo || !fechaMovimiento) {
+    const idUsuario = 1; // Por ahora, hasta poder loguear y verificar cada usuario
+
+    if (!monto || !tipo || !fechaMovimiento) { // Validamos los datos que son obligatorios completar
         alert('Por favor completa todos los campos');
         return;
     }
     
-    // Crear objeto con los datos
-    const nuevoMovimiento = {
-        id_usuario: 1,
+    const nuevoMovimiento = { //Creamos el nuevo movimiento con los datos ingresados
+        id_usuario: parseFloat(idUsuario),
         monto: parseFloat(monto),
         tipo: tipo,
         descripcion: {
@@ -128,32 +139,24 @@ async function agregarMovimiento(evento) {
         },
         fecha_movimiento: new Date(fechaMovimiento + 'T00:00:00-03:00').toISOString()
     };
-    
     console.log("Enviando movimiento:", nuevoMovimiento);
-    
     try {
-        // Enviar a la API
-        const respuesta = await fetch(API_URL, {
+        const respuesta = await fetch(API_URL, { // Envia los datos al servidor
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(nuevoMovimiento)
         });
         
         if (respuesta.ok) {
-            alert('✅ Movimiento creado correctamente');
-            // Limpiar formulario
-            document.getElementById('form-movimiento').reset();
-            // Recargar la lista de movimientos
-            cargarMovimientos();
+            alert('Movimiento creado correctamente');
+            document.getElementById('form-movimiento').reset(); // Reset formulario
+            cargarMovimientos(); // Recargamos la lista de movimientos
         } else {
             const errorTexto = await respuesta.text();
-            alert(`❌ Error al crear movimiento: ${errorTexto}`);
+            alert(`Error al crear movimiento: ${errorTexto}`);
         }
-        
     } catch (error) {
         console.error('Error de conexión:', error);
-        alert('❌ Error de conexión con el servidor');
+        alert('Error de conexión con el servidor');
     }
 }
