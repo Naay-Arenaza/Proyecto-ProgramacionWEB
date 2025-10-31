@@ -5,7 +5,7 @@ DB_URL="postgres://postgres:12345@localhost:5432/proyectos?sslmode=disable"
 
 all: build
 
-run: docker/up tidy
+run: docker/up tidy 
 	@echo "--> Base de datos lista. Iniciando Air ..."
 	@air
 
