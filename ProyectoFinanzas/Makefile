@@ -1,55 +1,41 @@
-# Nombre del binario de la aplicación
+
 APP_NAME=my-app
-# Variables para la base de datos
+
 DB_URL="postgres://postgres:12345@localhost:5432/proyectos?sslmode=disable"
 
-# Esta línea detecta si 'docker compose' (v2) o 'docker-compose' (v1) está instalado
-COMPOSE_CMD ?= $(shell if docker compose version >/dev/null 2>&1; then \
-                    echo "docker compose"; \
-                 elif docker-compose --version >/dev/null 2>&1; then \
-                    echo "docker-compose"; \
-                 else \
-                    echo "docker-compose-not-found"; \
-                 fi)
-
-# Target por defecto
 all: build
 
-# Inicia el servidor
-run: check-docker docker/up build
-	@echo ">= Instalando Air..."
-	@go install github.com/air-verse/air@latest
-	@echo ">= Base de datos lista. Iniciando Air..."
+run: docker/up tidy
+	@echo "--> Base de datos lista. Iniciando Air ..."
 	@air
 
-# Genera código SQLC y Templ
 generate:
-	@echo ">= Generating SQLC code..."
+	@echo ">= Generando SQLC ..."
 	@sqlc generate
-#@echo ">= Generating Templ code..."
-#@templ generate
 
-# Construye el binario de la aplicación
+tidy:
+	@go mod tidy
+
 build: generate
-	@echo ">= Building application..."
+	@echo "--> Iniciando servidor ..."
 	@go build -o $(APP_NAME) .
 
-#Base de Datos y Docker 
-# Levanta la base de datos en modo 'detached' (-d)
-docker/up: check-docker
+docker/up: 
 	@echo ">= Iniciando base de datos con Docker Compose..."
-	@$(COMPOSE_CMD) up -d
+	@docker compose up -d  # El -d es importante para que corra en segundo plano
+	@echo ">= Esperando a que la base de datos PostgreSQL esté lista..."
+	@until docker exec contenedor_ProyectoFinanzas pg_isready -U postgres -q; do \
+        echo "Base de datos no está lista, reintentando en 1s..."; \
+        sleep 1; \
+    done
 
-# Baja la base de datos
-docker/down: check-docker
-	@echo ">= Deteniendo base de datos..."
-	@$(COMPOSE_CMD) down
+docker/down: 
+	@echo "--> Deteniendo base de datos ..."
+	@docker compose down
 
-# Muestra los logs de la base de datos
-docker/logs: check-docker
-	@$(COMPOSE_CMD) logs -f
+docker/logs: 
+	@docker compose logs -f
 
-# Crea una nueva migración de base de datos, te pide el nombre 
 db/migrate:
 	@read -p "Enter migration name: " name; \
 	atlas migrate diff $name \
@@ -57,18 +43,18 @@ db/migrate:
 	--to "file://db/schema/schema.sql" \
 	--dev-url "docker://postgres/16/dev" 
 
-# Construye el binario de la aplicación
 clean:
 	@rm -f $(APP_NAME)
 
-# Esta regla comprueba si se encontró un comando de Docker Compose
-check-docker:
-	@if [ "$(COMPOSE_CMD)" = "docker-compose-not-found" ]; then \
-		echo ""; \
-		echo "ERROR -> No se encontró 'docker compose' (v2) ni 'docker-compose' (v1)."; \
-		echo "Por favor, instala Docker para continuar."; \
-		echo ""; \
-		exit 1; \
-	fi
+test-Op-CRUD: 
+	@echo "--> Ejecutando test de las operaciones CRUD: "
+	@go test -v 
 
+test-Prueba-API: 
+	@echo "--> Ejecutando pruebas API: "
+	@chmod +x ./requests.sh
+	@./requests.sh
 
+tests: 
+	@make test-Op-CRUD
+	@make test-Prueba-API

@@ -1,6 +1,9 @@
 # PROYECTO FINANZAS
 Este proyecto es un servidor web escrito en Go con el objetivo de registrar las finanzas del usuario. 
 
+# Requsitos:
+    - 
+
 ## Estructura del proyecto
 ProyectoFinanzas/
 ├── db                       # Lógica de la base de datos
