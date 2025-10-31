@@ -61,7 +61,8 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
         Esto levantara un volumen docker compose con la base de datos, actualizara dependencias, levantara air e inciara el servidor.
 
 4. **Ejecutar Tests**:
-    Ejecuta el siguiente comando "make tests"
+    1. Abrir otra terminar en ./Proyecto-ProgramacionWEB/ProyectosFinanzas 
+    2. Ejecuta el siguiente comando "make tests"
         Esto ejecutara en primera instancia el test de operaciones CRUD y luego la pruba de la API.
 
 4. **Acceder a la web**:
