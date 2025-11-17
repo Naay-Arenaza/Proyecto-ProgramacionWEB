@@ -21,21 +21,15 @@ CREATE TABLE Movimiento (
 INSERT INTO Usuario (nombre, apellido, email, contraseña)
 VALUES
 ('Ana', 'García', 'ana.garcia@example.com', 'hash123'),
-('Bruno', 'López', 'bruno.lopez@example.com', 'hash456'),
-('Carla', 'Pérez', 'carla.perez@example.com', 'hash789');
+('Bruno', 'López', 'bruno.lopez@example.com', 'hash456');
+
 INSERT INTO Movimiento (id_usuario, monto, tipo, descripcion, fecha_movimiento)
 VALUES
 -- Movimientos de Ana
 (1, 1200.00, 'I', 'Sueldo mensual', '2025-10-01'),
-(1, 300.00, 'G', 'Compra supermercado', '2025-10-03'),
 (1, 150.00, 'G', 'Cine con amigos', '2025-10-05'),
+(1, 400.00, 'G', 'Ropa nueva', '2025-10-29'),
 
--- Movimientos de Bruno
 (2, 2500.00, 'I', 'Pago freelance', '2025-10-02'),
-(2, 500.00, 'G', 'Cena en restaurante', '2025-10-04'),
 (2, 800.00, 'G', 'Reparación de computadora', '2025-10-06'),
-
--- Movimientos de Carla
-(3, 1800.00, 'I', 'Venta de productos', '2025-10-01'),
-(3, 400.00, 'G', 'Ropa nueva', '2025-10-03'),
-(3, 250.00, 'G', 'Transporte', '2025-10-05');
+(2, 250.00, 'I', 'Transporte', '2025-10-29');

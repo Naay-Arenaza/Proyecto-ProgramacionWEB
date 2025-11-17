@@ -1,18 +1,10 @@
 package logic
 
 import (
+	sqlc "ProyectoFinanzas/db/sqlc"
 	"context"
 	"errors"
 	"time"
-
-	//"database/sql"
-	//"encoding/json"
-	//"fmt"
-	//"log"
-	//"net/http"
-	//"strconv"
-	//"strings"
-	sqlc "ProyectoFinanzas/db/sqlc"
 
 	_ "github.com/lib/pq"
 )
