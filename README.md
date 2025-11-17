@@ -12,6 +12,8 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
             go install github.com/air-verse/air@latest 
         - go
             Se puede descargar desde [golang.org](https://golang.org/dl/)
+        - hurl
+            Se puede descargar desde (https://hurl.dev/docs/installation.html)
 
 ## Estructura del proyecto
     ProyectoFinanzas/
@@ -45,24 +47,23 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
     ├── main.go                  # Punto de entrada y servidor principal
     ├── Makefile                 # Configuracion para automatizar tareas
     ├── my-app                   # Manipulacion de DOM, reaccion a eventos, manipulacion de formulario
-    ├── requests.sh              # Test de operaciones CURL (Pruebas API)
+    ├── requests.hurl            # Test de operaciones HURL (Pruebas API)
     ├── sqlc.yaml                # Configuracion de SQLC
 
 ## Ejecución
-1. **Instalar Go**: 
-    Tener Go instalado en tu sistema (Se puede descargar desde [golang.org](https://golang.org/dl/))
+1. **Instalar requisitos previos**: 
 
 2. **Abrir proyecto**: 
     Abre la carpeta del proyecto en tu editor de preferencia, por ejemplo, Visual Studio Code.
 
 3. **Ejecutar el servidor**:
     1. Clona el proyecto --> git clone https://github.com/Naay-Arenaza/Proyecto-ProgramacionWEB.git
-    2. cd ./Proyecto-ProgramacionWEB/ProyectosFinanzas
+    2. cd ./Proyecto-ProgramacionWEB
     3. Ejecuta el siguiente comando "make run"
         Esto levantara un volumen docker compose con la base de datos, actualizara dependencias, levantara air e inciara el servidor.
 
 4. **Ejecutar Tests**:
-    1. Abrir otra terminar en ./Proyecto-ProgramacionWEB/ProyectosFinanzas 
+    1. Abrir otra terminar en ./Proyecto-ProgramacionWEB
     2. Ejecuta el siguiente comando "make tests"
         Esto ejecutara en primera instancia el test de operaciones CRUD y luego la pruba de la API.
 
