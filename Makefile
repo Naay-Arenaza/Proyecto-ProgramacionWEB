@@ -15,6 +15,8 @@ dev: docker/up tidy
 generate:
 	@echo ">= Generando SQLC ..."
 	@sqlc generate
+	@echo ">= Generating Templ code..." 
+	@templ generate
 
 tidy:
 	@go mod tidy

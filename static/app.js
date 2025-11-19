@@ -72,8 +72,6 @@ function crearHTMLMovimiento(mov) { //Crear el HTML de cada movimiento
         return `
             <div class="movimiento-${clase}-flex">
                 <div class="movimiento-detalles">
-                    <span class="ID"> ID: ${mov.id_movimiento}</span>
-                        <br>
                     <span class="fecha"> Fecha: ${fechaFormateada}</span>
                         <br>
                     <span class="descripcion"> Descripcion: ${descripcion}</span>

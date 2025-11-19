@@ -1,0 +1,61 @@
+package views
+
+import (
+    "fmt"
+    //"ProyectoFinanzas/db" 
+    "time"
+    sqlc "ProyectoFinanzas/db/sqlc"
+) 
+
+func formatearFecha(t time.Time) string {
+    return t.Format("02/01/2006")
+}
+
+templ MovimientoList(movimientos []sqlc.Movimiento) {
+    <div class="tarjeta-movimientos-flex">
+        <div id="lista_movimientos">
+            if len(movimientos) == 0 {
+                <div class="no-movimientos">No hay movimientos registrados</div>
+            } else {
+                for _, mov := range movimientos {
+                    <div class={ "movimiento-" + obtenerClase(mov.Tipo) + "-flex" }>
+                        <div class="movimiento-detalles">
+                            <span class="fecha"> Fecha: { formatearFecha(mov.FechaMovimiento) }</span>
+                            <br/>
+                            <span class="descripcion"> Descripcion: { mov.Descripcion.String }</span>
+                            <br/>
+                            <span class={ "monto", obtenerClase(mov.Tipo) }> 
+                                Monto: { obtenerSimbolo(mov.Tipo) }${ fmt.Sprintf("%.2f", mov.Monto) }
+                            </span>
+                            <br/>
+                            <span class="gasto"> Tipo de Gasto: { obtenerTexto(mov.Tipo) }</span>
+                        </div>
+                        // Nota: El botón borrar requerirá un pequeño script o un form POST/DELETE
+                        <br/>
+                        // Usamos un form pequeño para borrar sin JS complejo
+                        <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/delete/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
+                             <button type="submit" class="btn-borrar">Eliminar</button>
+                        </form>
+                        <br/><br/>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+
+// Helpers para lógica de vista (lo que antes hacías en JS)
+func obtenerClase(tipo string) string {
+    if tipo == "I" { return "ingreso" }
+    return "gasto"
+}
+
+func obtenerSimbolo(tipo string) string {
+    if tipo == "I" { return "+" }
+    return "-"
+}
+
+func obtenerTexto(tipo string) string {
+    if tipo == "I" { return "INGRESO" }
+    return "GASTO"
+}

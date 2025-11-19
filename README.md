@@ -15,6 +15,10 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
         - hurl
             Se puede descargar desde (https://hurl.dev/docs/installation.html)
 
+        go install github.com/a-h/templ/cmd/templ@latest
+        go get github.com/a-h/templ
+        templ generate
+
 ## Estructura del proyecto
     ProyectoFinanzas/
     ├── db                       # Lógica de la base de datos
