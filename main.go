@@ -21,19 +21,16 @@ func main() {
 	defer db.Close() //Cerrar conexion
 
 	queries := sqlc.New(db)
-
-	movLogic := logic.NewMovimientoLogic(queries) // -> Capa Logica
-
+	movLogic := logic.NewMovimientoLogic(queries)  // -> Capa Logica
 	movHandler := handlers.NewMovHandler(movLogic) // -> /movimientos y /movimientos/
-	handler := handlers.NewHandler()               // -> /
 
 	//Abrir el servidor
 	staticDir := "./static"
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 
-	http.HandleFunc("/", handler.ServeForm)
-	http.HandleFunc("/movimientos", movHandler.MovimientosHandler)
+	http.HandleFunc("/", movHandler.ServeForm)
+	http.HandleFunc("/movimientos", movHandler.PostMovimiento)
 	http.HandleFunc("/movimientos/", movHandler.MovimientoHandler)
 
 	port := ":8080"
