@@ -33,8 +33,19 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                         // Nota: El botón borrar requerirá un pequeño script o un form POST/DELETE
                         <br/>
                         // Usamos un form pequeño para borrar sin JS complejo, pasamos el id para poder borrar
-                        <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d",mov.IDMovimiento)) } method="POST" style="display:inline;">
-                             <button type="submit" class="btn-borrar">Eliminar</button>
+                        // FORMULARIO PARA ELIMINAR
+                        <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
+                            <input type="hidden" name="_method" value="DELETE"/> 
+
+                            <button type="submit" class="btn-borrar">Delete</button>
+                        </form>
+
+                        // FORMULARIO PARA ACTUALIZAR (Update)
+                        // Nota: Cambiamos method="PUT" por method="POST"
+                        <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
+                            <input type="hidden" name="_method" value="PUT"/>
+
+                            <button type="submit" class="btn-borrar">Update</button>
                         </form>
                         <br/><br/>
                     </div>

@@ -60,7 +60,18 @@ func (h *MovHandler) MovimientoHandler(w http.ResponseWriter, r *http.Request) {
 	// case http.MethodPut:
 	// 	h.updateMov(w, r, id)
 	case http.MethodPost:
-		h.deleteMov(w, r, id)
+		// Leemos el input oculto
+		metodoReal := r.FormValue("_method")
+
+		switch metodoReal {
+		case "DELETE":
+			h.deleteMov(w, r, id)
+		case "PUT":
+			//h.updateMov(w, r, id) // Asumiendo que tienes esta función
+		default:
+			// Si no tiene input oculto, podría ser un POST normal o error
+			http.Error(w, "Accion no soportada", http.StatusBadRequest)
+		}
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -78,8 +89,8 @@ func (h *MovHandler) deleteMov(w http.ResponseWriter, r *http.Request, id int) {
 
 func (q *MovHandler) MovimientosHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	//case http.MethodGet:
-	//q.getMovimientos(w, r)
+	case http.MethodGet:
+		//q.getMovimientos(w, r)
 	case http.MethodPost:
 		q.PostMovimiento(w, r)
 	default:
