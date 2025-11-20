@@ -2,7 +2,6 @@ package views
 
 import (
     "fmt"
-    //"ProyectoFinanzas/db" 
     "time"
     sqlc "ProyectoFinanzas/db/sqlc"
 ) 
@@ -30,12 +29,14 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                             <br/>
                             <span class="gasto"> Tipo de Gasto: { obtenerTexto(mov.Tipo) }</span>
                         </div>
-                        // Nota: El botón borrar requerirá un pequeño script o un form POST/DELETE
                         <br/>
-                        // Usamos un form pequeño para borrar sin JS complejo
-                        <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/delete/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
-                             <button type="submit" class="btn-borrar">Eliminar</button>
-                        </form>
+                           <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET" style="display:inline;">
+                                <button type="submit" class="btn-borrar">Editar</button>
+                            </form>
+                            <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
+                                <input type="hidden" name="_method" value="DELETE"/>
+                                <button type="submit" class="btn-borrar">Borrar</button>
+                            </form>
                         <br/><br/>
                     </div>
                 }

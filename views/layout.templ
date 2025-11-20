@@ -1,6 +1,6 @@
 package views
 
-templ Layout(title string) {
+templ Layout(title string, comp templ.Component) {
 	<!DOCTYPE html>
 	<html lang="es">
 	<head>
@@ -9,8 +9,8 @@ templ Layout(title string) {
 		<link rel="stylesheet" href="/static/styles.css"/>
 		<title>{ title }</title>
 	</head>
-	<body>
-		{ children... }
-	</body>
+		<body>
+			@comp
+		</body>
 	</html>
 }

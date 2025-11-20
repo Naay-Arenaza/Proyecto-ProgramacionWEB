@@ -25,11 +25,11 @@ func (l *MovCapaLogica) ListMovimientoAllLogic(ctx context.Context) ([]sqlc.Movi
 
 func (l *MovCapaLogica) CreateMovimientoLogic(ctx context.Context, arg sqlc.CreateMovimientoParams) (sqlc.Movimiento, error) {
 
-	if arg.Monto <= 0 {
+	if !MontoValido(arg.Monto) {
 		return sqlc.Movimiento{}, errors.New("el monto del movmiento no puede ser menor o igual a 0")
 	}
 
-	if !esFechaValida(arg.FechaMovimiento) {
+	if !EsFechaValida(arg.FechaMovimiento) {
 		return sqlc.Movimiento{}, errors.New("la fecha debe ser menor a la actual")
 	}
 
@@ -42,11 +42,11 @@ func (l *MovCapaLogica) GetMovimientoLogic(ctx context.Context, id int32) (sqlc.
 
 func (l *MovCapaLogica) UpdateMovimientoLogic(ctx context.Context, arg sqlc.UpdateMovimientoParams) (sqlc.Movimiento, error) {
 
-	if arg.Monto <= 0 {
+	if !MontoValido(arg.Monto) {
 		return sqlc.Movimiento{}, errors.New("el monto del movmiento no puede ser menor o igual a 0")
 	}
 
-	if !esFechaValida(arg.FechaMovimiento) {
+	if !EsFechaValida(arg.FechaMovimiento) {
 		return sqlc.Movimiento{}, errors.New("la fecha debe ser menor a la actual")
 	}
 
@@ -57,7 +57,14 @@ func (l *MovCapaLogica) DeleteMovimientoLogic(ctx context.Context, id int32) err
 	return l.querie.DeleteMovimiento(ctx, id)
 }
 
-func esFechaValida(fechaIngresada time.Time) bool {
+func MontoValido(monto float64) bool {
+	if monto <= 0.0 {
+		return false
+	}
+	return true
+}
+
+func EsFechaValida(fechaIngresada time.Time) bool {
 	horaActual := time.Now()
 
 	if fechaIngresada.After(horaActual) {

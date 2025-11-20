@@ -8,7 +8,7 @@ run: docker/up tidy
 	@echo "--> Iniciando servidor..."
 	@go run .
 
-dev: docker/up tidy
+dev: docker/up tidy generate
 	@echo "--> Iniciando servidor con Air..."
 	@air
 
