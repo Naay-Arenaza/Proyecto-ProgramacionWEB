@@ -21,17 +21,20 @@ func main() {
 	defer db.Close() //Cerrar conexion
 
 	queries := sqlc.New(db)
-	movLogic := logic.NewMovimientoLogic(queries)  // -> Capa Logica
-	movHandler := handlers.NewMovHandler(movLogic) // -> /movimientos y /movimientos/
+
+	movLogic := logic.NewMovimientoLogic(queries) // -> Capa Logica
+
+	movWebHandler := handlers.NewMovimientoWebHandler(movLogic)
 
 	//Abrir el servidor
 	staticDir := "./static"
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 
-	http.HandleFunc("/", movHandler.ServeForm)
-	http.HandleFunc("/movimientos", movHandler.PostMovimiento)
-	http.HandleFunc("/movimientos/", movHandler.MovimientoHandler)
+	http.HandleFunc("/", movWebHandler.ServeForm)
+	http.HandleFunc("/movimientos/edit/", movWebHandler.EditMovimientoHandler)
+	http.HandleFunc("/movimientos", movWebHandler.MovimientosHandler)
+	http.HandleFunc("/movimientos/", movWebHandler.MovimientoHandler)
 
 	port := ":8080"
 	fmt.Printf("Servidor ESTÁTICO escuchando en http://localhost%s\n", port)

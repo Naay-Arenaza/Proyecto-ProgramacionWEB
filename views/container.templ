@@ -1,0 +1,22 @@
+package views
+
+import (
+    sqlc "ProyectoFinanzas/db/sqlc"
+)
+
+templ Container(movimientos []sqlc.Movimiento) {
+    <main>
+         <div class="contenedor-grid">
+            <div class="header item-grid">
+                <h1 id="main-title">Gestion de Movimientos</h1>
+            </div>
+            <div class="sidebar item-grid">
+                @MovimientoForm()
+        </div>
+            <div class="content item-grid">
+                <h2 id="titulo-listado-movimientos">Listado de Movimientos</h2>
+                        @MovimientoList(movimientos)
+            </div> 
+        </div>
+    </main>
+}

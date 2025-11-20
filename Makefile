@@ -1,17 +1,22 @@
-
 APP_NAME=my-app
 
 DB_URL="postgres://postgres:12345@localhost:5432/proyectos?sslmode=disable"
 
 all: build
 
-run: docker/up tidy 
-	@echo "--> Base de datos lista. Iniciando Air ..."
+run: docker/up tidy
+	@echo "--> Iniciando servidor..."
+	@go run .
+
+dev: docker/up tidy generate
+	@echo "--> Iniciando servidor con Air..."
 	@air
 
 generate:
 	@echo ">= Generando SQLC ..."
 	@sqlc generate
+	@echo ">= Generating Templ code..." 
+	@templ generate
 
 tidy:
 	@go mod tidy
@@ -50,10 +55,9 @@ test-Op-CRUD:
 	@echo "--> Ejecutando test de las operaciones CRUD: "
 	@go test -v 
 
-test-Prueba-API: 
+test-Prueba-API:
 	@echo "--> Ejecutando pruebas API: "
-	@chmod +x ./requests.sh
-	@./requests.sh
+	@/usr/bin/hurl --test requests.hurl
 
 tests: 
 	@make test-Op-CRUD

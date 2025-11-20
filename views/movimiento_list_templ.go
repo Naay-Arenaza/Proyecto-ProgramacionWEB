@@ -9,9 +9,8 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"fmt"
-	//"ProyectoFinanzas/db"
 	sqlc "ProyectoFinanzas/db/sqlc"
+	"fmt"
 	"time"
 )
 
@@ -63,7 +62,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var2).String())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 1, Col: 0}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 1, Col: 0}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -76,7 +75,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(formatearFecha(mov.FechaMovimiento))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 23, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 22, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -89,7 +88,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Descripcion.String)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 25, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 24, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -111,7 +110,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var6).String())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 1, Col: 0}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 1, Col: 0}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -124,7 +123,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(obtenerSimbolo(mov.Tipo))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 28, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 27, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -137,7 +136,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f", mov.Monto))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 28, Col: 100}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 27, Col: 100}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -150,7 +149,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(obtenerTexto(mov.Tipo))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 31, Col: 88}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 30, Col: 88}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -161,28 +160,28 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var11 templ.SafeURL
-				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
+				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 37, Col: 102}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 33, Col: 110}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" method=\"POST\" style=\"display:inline;\"><input type=\"hidden\" name=\"_method\" value=\"DELETE\"> <button type=\"submit\" class=\"btn-borrar\">Delete</button></form><form action=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" method=\"GET\" style=\"display:inline;\"><button type=\"submit\" class=\"btn-borrar\">Editar</button></form><form action=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var12 templ.SafeURL
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/entity_list.templ`, Line: 45, Col: 102}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 36, Col: 106}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" method=\"POST\" style=\"display:inline;\"><input type=\"hidden\" name=\"_method\" value=\"PUT\"> <button type=\"submit\" class=\"btn-borrar\">Update</button></form><br><br></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" method=\"POST\" style=\"display:inline;\"><input type=\"hidden\" name=\"_method\" value=\"DELETE\"> <button type=\"submit\" class=\"btn-borrar\">Borrar</button></form><br><br></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
