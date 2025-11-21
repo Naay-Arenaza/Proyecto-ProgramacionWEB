@@ -3,6 +3,7 @@ package views
 import (
     sqlc "ProyectoFinanzas/db/sqlc"
     "fmt"
+    "strings"
 )
 
 templ MovimientoEditForm(mov sqlc.Movimiento) {
@@ -28,8 +29,8 @@ templ MovimientoEditForm(mov sqlc.Movimiento) {
                         <div class="form-group">
                             <label>Tipo:</label>
                             <select name="tipo" required>
-                                <option value="I" selected={ mov.Tipo == "I" }>Ingreso</option>
-                                <option value="G" selected={ mov.Tipo == "G" }>Gasto</option>
+                                <option value="I" selected={ strings.ToUpper(strings.TrimSpace(mov.Tipo)) == "I" }>Ingreso</option>
+                                <option value="G" selected={ strings.ToUpper(strings.TrimSpace(mov.Tipo)) == "G" }>Gasto</option>
                             </select>
                         </div>
 

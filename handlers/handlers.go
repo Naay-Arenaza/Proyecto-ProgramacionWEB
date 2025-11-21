@@ -26,11 +26,9 @@ func NewMovimientoWebHandler(l *logic.MovCapaLogica) *MovimientoWebHandler {
 }
 
 func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. Extraer ID de la URL
 	idStr := strings.TrimPrefix(r.URL.Path, "/movimientos/edit/")
 	id, _ := strconv.Atoi(idStr)
 
-	// 2. Buscar información del movimiento
 	mov, err := h.logic.GetMovimientoLogic(r.Context(), int32(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -42,7 +40,7 @@ func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *h
 	}
 
 	html := views.MovimientoEditForm(mov)
-
+	log.Printf("DEBUG: Cargando Movimiento ID %d, TIPO: '%s'", mov.IDMovimiento, mov.Tipo)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	html.Render(r.Context(), w)
 }
