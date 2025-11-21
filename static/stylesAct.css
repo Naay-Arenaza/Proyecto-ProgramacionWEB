@@ -1,4 +1,3 @@
-/* === GENERAL === */
 body {
     margin: 0;
     padding: 0;
@@ -12,7 +11,6 @@ body {
     min-height: 100vh;
 }
 
-/* === CARD DEL FORMULARIO === */
 .form-card {
     background-color: #2d3748;
     padding: 2rem;
@@ -36,7 +34,6 @@ body {
     text-shadow: 0 2px 4px rgba(66,153,225,0.25);
 }
 
-/* === FORMULARIO === */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -69,7 +66,6 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(66,153,225,0.3);
 }
 
-/* === BOTONES === */
 .btn-borrar {
     background-color: #4299e1;
     color: #1a202c;
@@ -80,35 +76,32 @@ select:focus {
     font-weight: 700;
     cursor: pointer;
     width: 100%;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: background-color 0.2s ease;  /* ← solo queda el color */
+    margin-top: 1rem;
 }
 
 .btn-borrar:hover {
     background-color: #63b3ed;
-    transform: translateY(-2px);
+    transform: none; /* ← elimina el movimiento */
 }
 
-/* Botón cancelar con estilo distinto */
 form[action="/"] .btn-borrar {
     background-color: #f56565;
 }
 
 form[action="/"] .btn-borrar:hover {
     background-color: #e53e3e;
+    transform: none; /* ← elimina el movimiento */
 }
 
 .form-card {
-    gap: 2rem; /* antes era 1.2rem */
+    gap: 2rem;
 }
 
 .form-group {
-    margin-bottom: 1.4rem; /* agrega espacio extra entre campos */
+    margin-bottom: 1.4rem;
 }
 
 .form-card h2 {
-    margin-bottom: 1.5rem; /* separa el título del formulario */
-}
-
-.btn-borrar {
-    margin-top: 1rem; /* añade espacio antes del botón */
+    margin-bottom: 1.5rem;
 }
