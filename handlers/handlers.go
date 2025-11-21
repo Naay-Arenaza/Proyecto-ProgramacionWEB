@@ -60,7 +60,7 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Error interno del servidor al cargar datos", http.StatusInternalServerError)
 		return
 	}
-	// Lista de todos los movimientos
+	// Lista de todos los movimientos + createFrom
 	comp := views.Container(movimientos)
 	templ.Handler(views.Layout("MovFinanzas", comp)).ServeHTTP(w, r)
 

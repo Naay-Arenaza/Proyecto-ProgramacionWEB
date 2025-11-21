@@ -212,7 +212,19 @@ body {
     align-self: flex-end; 
     transition: background-color 0.2s ease;
 }
-
+.btn-editar{
+    background-color: #63b3ed;
+    color: #1a202c;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    align-self: flex-end; 
+    transition: background-color 0.2s ease;
+}
 .btn-borrar:hover {
     background-color: #e53e3e;
 }

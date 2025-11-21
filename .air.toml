@@ -6,5 +6,6 @@ tmp_dir = "tmp"
   full_bin = "APP_ENV=dev APP_USER=air ./my-app"
   include_ext = ["go", "templ", "sql"]
   exclude_dir = ["tmp", "vendor", "db/sqlc", "db/migrations", "db/schema", "static"]
+  exclude_regex = ["_templ\\.go"]
 [run]
   skip_init = true
