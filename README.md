@@ -43,7 +43,8 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
     |   └── movimiento_form.templ   # Formulario de Creación
     |   └── movimiento_list.templ   # Listado de Movimientos
     ├── static/                     # Archivos Servidos Directamente
-    |   └── styles.css              # Front-end estilo
+    |   └── styles.css              # Front-end estilo - Movimientos
+    |   └── styles.css              # Front-end estilo - Actualizacion
     ├── tmp/                        # Archivos Temporales
     ├── .air.toml                   # Recarga en vivo de app
     ├── db_test.go                  # Test de operaciones CRUD
