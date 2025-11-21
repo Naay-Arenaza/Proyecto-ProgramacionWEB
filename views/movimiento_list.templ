@@ -12,6 +12,14 @@ func formatearFecha(t time.Time) string {
 
 templ MovimientoList(movimientos []sqlc.Movimiento) {
     <div class="tarjeta-movimientos-flex">
+        <div>
+            <label for="filtro_movs">Ordenar por:</label>
+                <select name="filtro_movs" id="filtro_movs" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="G">Gasto</option>
+                    <option value="I">Ingreso</option>
+                </select>
+        </div>
         <div id="lista_movimientos">
             if len(movimientos) == 0 {
                 <div class="no-movimientos">No hay movimientos registrados</div>

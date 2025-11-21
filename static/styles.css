@@ -228,4 +228,7 @@ body {
 .btn-borrar:hover {
     background-color: #e53e3e;
 }
+.btn-editar:hover {
+    background-color: #477be9;
+}
 
