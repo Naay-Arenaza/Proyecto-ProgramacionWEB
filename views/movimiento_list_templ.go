@@ -168,7 +168,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" method=\"GET\" style=\"display:inline;\"><button type=\"submit\" class=\"btn-editar\">Editar</button></form><form action=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" method=\"GET\" style=\"display:inline;\"><button type=\"submit\" class=\"btn-borrar\">Editar</button></form><form action=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
