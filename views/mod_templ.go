@@ -34,98 +34,85 @@ func MovimientoEditForm(mov sqlc.Movimiento) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/styles.css\"><title>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/styles.css\"><title>Editar Movimiento</title></head><body><div class=\"pantalla-edicion\"><div class=\"form-card card-con-fondo\"><h2 style=\"text-align:center; color: white;\">Editar Movimiento</h2><form action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("UPDATE")
+		var templ_7745c5c3_Var2 templ.SafeURL
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 15, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 23, Col: 94}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title></head><body><div class=\"form-card\"><h2>Editar Movimiento</h2><form action=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" method=\"POST\"><input type=\"hidden\" name=\"_method\" value=\"PUT\"><div class=\"form-group\"><label for=\"monto_mov\">Monto:</label> <input type=\"number\" step=\"any\" name=\"monto\" id=\"monto_mov\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 templ.SafeURL
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f", mov.Monto))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 21, Col: 86}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 28, Col: 122}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" method=\"POST\" style=\"display:inline;\"><input type=\"hidden\" name=\"_method\" value=\"PUT\"><div class=\"form-group\"><label>Monto:</label> <input type=\"number\" step=\"any\" name=\"monto\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" required class=\"form-input\"></div><div class=\"form-group\"><label for=\"tipo_mov\">Tipo:</label> <select name=\"tipo\" id=\"tipo_mov\" required class=\"form-input\"><option value=\"I\" selected=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f", mov.Monto))
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Tipo == "I")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 26, Col: 99}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 34, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" required></div><div class=\"form-group\"><label>Tipo:</label> <select name=\"tipo\" required><option value=\"I\" selected=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\">Ingreso</option> <option value=\"G\" selected=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Tipo == "I")
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Tipo == "G")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 32, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 35, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">Ingreso</option> <option value=\"G\" selected=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">Gasto</option></select></div><div class=\"form-group\"><label for=\"descripcion_mov\">Descripción:</label> <input type=\"text\" name=\"descripcion\" id=\"descripcion_mov\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Tipo == "G")
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Descripcion.String)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 33, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 41, Col: 113}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\">Gasto</option></select></div><div class=\"form-group\"><label>Descripción:</label> <input type=\"text\" name=\"descripcion\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"form-input\"></div><div class=\"form-group\"><label for=\"fechaMovimiento\">Fecha de Movimiento:</label> <input type=\"date\" name=\"fechaMovimiento\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Descripcion.String)
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(mov.FechaMovimiento.Format("2006-01-02"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 39, Col: 84}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 47, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\"></div><div class=\"form-group\"><label>Fecha:</label> <input type=\"date\" name=\"fechaMovimiento\" value=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var8 string
-		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(mov.FechaMovimiento.Format("2006-01-02"))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/mod.templ`, Line: 45, Col: 71}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" required></div><button type=\"submit\" class=\"btn-borrar\">Guardar cambios</button></form><form action=\"/\" method=\"GET\"><button type=\"submit\" class=\"btn-borrar\">Cancelar</button></form></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" id=\"fechaMovimiento\" class=\"form-input\" required></div><div class=\"acciones-form\"><button type=\"submit\" class=\"btn-G-C\">Guardar cambios</button> <a href=\"/\" class=\"btn-borrar\" style=\"text-decoration:none; text-align:center;\">Cancelar</a></div></form></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
