@@ -31,9 +31,9 @@ func TestQueries_CRUD(t *testing.T) {
 
 	//CreateUsuario
 	createdUser, err := queries.CreateUsuario(ctx, sqlc.CreateUsuarioParams{
-		Nombre:     "Jose",
-		Apellido:   "Lopez",
-		Email:      "joselopez@example.com",
+		Nombre:     "Pablo",
+		Apellido:   "Llanos",
+		Email:      "pabloLlanos1@example.com",
 		Contraseña: "12345"})
 
 	if err != nil {

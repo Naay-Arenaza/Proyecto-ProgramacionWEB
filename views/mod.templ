@@ -15,42 +15,41 @@ templ MovimientoEditForm(mov sqlc.Movimiento) {
 		<title>{ "UPDATE" }</title>
 	</head>
     <body>
-  <div class="form-card">
-        <h2>Editar Movimiento</h2>
+        <div class="form-card">
+                <h2>Editar Movimiento</h2>
+                    <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
+                        <input type="hidden" name="_method" value="PUT"/>
 
-        <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
-            <input type="hidden" name="_method" value="PUT"/>
+                        <div class="form-group">
+                            <label>Monto:</label>
+                            <input type="number" step="any" name="monto" value={ fmt.Sprintf("%.2f", mov.Monto) } required/>
+                        </div>
 
-            <div class="form-group">
-                <label>Monto:</label>
-                <input type="number" step="any" name="monto" value={ fmt.Sprintf("%.2f", mov.Monto) } required/>
-            </div>
+                        <div class="form-group">
+                            <label>Tipo:</label>
+                            <select name="tipo" required>
+                                <option value="I" selected={ mov.Tipo == "I" }>Ingreso</option>
+                                <option value="G" selected={ mov.Tipo == "G" }>Gasto</option>
+                            </select>
+                        </div>
 
-            <div class="form-group">
-                <label>Tipo:</label>
-                <select name="tipo" required>
-                    <option value="I" selected={ mov.Tipo == "I" }>Ingreso</option>
-                    <option value="G" selected={ mov.Tipo == "G" }>Gasto</option>
-                </select>
-            </div>
+                        <div class="form-group">
+                            <label>Descripción:</label>
+                            <input type="text" name="descripcion" value={ mov.Descripcion.String }/>
+                        </div>
 
-            <div class="form-group">
-                <label>Descripción:</label>
-                <input type="text" name="descripcion" value={ mov.Descripcion.String }/>
-            </div>
-
-            <div class="form-group">
-                <label>Fecha:</label>
-                <input type="date" name="fechaMovimiento" 
-                       value={ mov.FechaMovimiento.Format("2006-01-02") } 
-                       required/>
-            </div>
-                <button type="submit" class="btn-borrar">Guardar cambios</button>
-        </form>
-         <form action="/" method="GET"> 
-                    <button type="submit" class="btn-borrar">Cancelar</button>
+                        <div class="form-group">
+                            <label>Fecha:</label>
+                            <input type="date" name="fechaMovimiento" 
+                                value={ mov.FechaMovimiento.Format("2006-01-02") } 
+                                required/>
+                        </div>
+                            <button type="submit" class="btn-borrar">Guardar cambios</button>
+                    </form>
+                <form action="/" method="GET"> 
+                        <button type="submit" class="btn-borrar">Cancelar</button>
                 </form>
-    </div>
-    		</body>
+            </div>
+    	</body>
 	</html>
 }

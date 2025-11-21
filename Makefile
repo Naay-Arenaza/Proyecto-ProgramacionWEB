@@ -55,7 +55,7 @@ test-Op-CRUD:
 	@echo "--> Ejecutando test de las operaciones CRUD: "
 	@go test -v 
 
-test-Prueba-API:
+test-Prueba-HURL:
 	@echo "--> Ejecutando pruebas API: "
 	@/usr/bin/hurl --test requests.hurl
 

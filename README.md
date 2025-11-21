@@ -14,45 +14,47 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
             Se puede descargar desde [golang.org](https://golang.org/dl/)
         - hurl
             Se puede descargar desde (https://hurl.dev/docs/installation.html)
-
-        go install github.com/a-h/templ/cmd/templ@latest
-        go get github.com/a-h/templ
-        templ generate
+        - go install github.com/a-h/templ/cmd/templ@latest
+          go get github.com/a-h/templ
+          templ generate
 
 ## Estructura del proyecto
     ProyectoFinanzas/
-    ├── db                       # Lógica de la base de datos
-    │   └── queries              # Consultas SQL 
-    │   │   └── movimiento.sql   # Consultas de movimientos financieros
-    │   │   └── usuario.sql      # Consultas de usuarios
-    │   └── schema               # Estructura de la base de datos
-    │   │   └── schema.sql       # Script para crear tablas y relaciones
-    │   └── sqlc                 # Archivos generados por sqlc para acceso a datos
-    │   |   └── db.go            # Funciones de conexión y manejo de la base de datos
-    │   |   └── models.go        # Modelos de datos usados en la aplicación
-    │   |   └── movimiento.sql.go# Código Go generado para movimientos
-    │   |   └── usuario.sql.Go   # Código Go generado para usuarios
-    |   └── connectDB.go         # Conexion a la BD
-    ├── handlers/                
-    |   └── handlers.go          # Conexion al servidor 
-    |   └── handlersMov.go       # API
+    ├── db                          # Lógica de la base de datos
+    │   └── queries                 # Consultas SQL 
+    │   │   └── movimiento.sql      # Consultas de movimientos financieros
+    │   │   └── usuario.sql         # Consultas de usuarios
+    │   └── schema                  # Estructura de la base de datos
+    │   │   └── schema.sql          # Script para crear tablas y relaciones
+    │   └── sqlc                    # Archivos generados por sqlc para acceso a datos
+    │   |   └── db.go               # Funciones de conexión y manejo de la base de datos
+    │   |   └── models.go           # Modelos de datos usados en la aplicación
+    │   |   └── movimiento.sql.go   # Código Go generado para movimientos
+    │   |   └── usuario.sql.Go      # Código Go generado para usuarios
+    |   └── connectDB.go            # Conexion a la BD
+    ├── handlers/                   # Capa de Presentación Web 
+    |   └── handlers.go             # Controladores Web 
     ├── logic/                   
-    |   └── logicMov.go          # Codigo con la Logica de Negocio (movimientos)
-    ├── static/                  # Archivos estáticos para la web (HTML, CSS, JS, imágenes)
-    │   └── index.html           # Página princial (movmientos)
-    |   └── app.js               # 
-    |   └── styles.css           # Front-end estilo
-    ├── tmp/
-    ├── .air.toml                # Recarga en vivo de app
-    ├── db_test.go               # Test de operaciones CRUD
-    ├── docker-compose.yml       # Configuracion servicios docker
-    ├── go.mod                   # Configuración y dependencias del módulo Go
-    ├── go.sum                   # Configuración y dependencias del módulo Go
-    ├── main.go                  # Punto de entrada y servidor principal
-    ├── Makefile                 # Configuracion para automatizar tareas
-    ├── my-app                   # Manipulacion de DOM, reaccion a eventos, manipulacion de formulario
-    ├── requests.hurl            # Test de operaciones HURL (Pruebas API)
-    ├── sqlc.yaml                # Configuracion de SQLC
+    |   └── logicMov.go             # Codigo con la Logica de Negocio (movimientos)
+    ├── views/                      # Archivos estáticos para la web (HTML, CSS, JS, imágenes)
+    |   └── conteiner.templ         # Contenedor Principal de la Página
+    |   └── layout.templ            # Plantilla de la Página
+    |   └── mod.templ               # Formulario de Modificación/Edición (update)
+    |   └── movimiento_form.templ   # Formulario de Creación
+    |   └── movimiento_list.templ   # Listado de Movimientos
+    ├── static/                     # Archivos Servidos Directamente
+    |   └── styles.css              # Front-end estilo
+    ├── tmp/                        # Archivos Temporales
+    ├── .air.toml                   # Recarga en vivo de app
+    ├── db_test.go                  # Test de operaciones CRUD
+    ├── docker-compose.yml          # Configuracion servicios docker
+    ├── go.mod                      # Configuración y dependencias del módulo Go
+    ├── go.sum                      # Configuración y dependencias del módulo Go
+    ├── main.go                     # Punto de entrada y servidor principal
+    ├── Makefile                    # Configuracion para automatizar tareas
+    ├── my-app                      # Manipulacion de DOM, reaccion a eventos, manipulacion de formulario
+    ├── requests.hurl               # Test de operaciones HURL 
+    ├── sqlc.yaml                   # Configuracion de SQLC
 
 ## Ejecución
 1. **Instalar requisitos previos**: 
@@ -83,5 +85,5 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
     make docker/logs    --> “Muestra los logs de docker”
     make db/migrate --> “Realiza migraciones de la BD, es necesario migracion inicial y sacar inserts de ProyectoFinanzas/db/schema/schema.sql”    
     make test-Op-CRUD --> “Realiza test de operaciones CRUD queries TP2”
-    make test-Prueba-API --> “Realiza test de a la API con varios curl de prueba”
-    make tests --> Ejecuta test-Op-CRUD y test-Prueba-API
+    make test-Prueba-HURL --> prueba de integración de la aplicación web (Prueba el SSR/HTML, validar flujo, ...)
+    make tests --> Ejecuta test-Op-CRUD y test-Prueba-HURL

@@ -6,6 +6,7 @@ import (
 	"ProyectoFinanzas/views"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,6 +25,28 @@ func NewMovimientoWebHandler(l *logic.MovCapaLogica) *MovimientoWebHandler {
 	return &MovimientoWebHandler{logic: l}
 }
 
+func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) {
+	// 1. Extraer ID de la URL
+	idStr := strings.TrimPrefix(r.URL.Path, "/movimientos/edit/")
+	id, _ := strconv.Atoi(idStr)
+
+	// 2. Buscar información del movimiento
+	mov, err := h.logic.GetMovimientoLogic(r.Context(), int32(id))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			http.NotFound(w, r) // Si no se encuentra en la BD, devolvemos 404
+			return
+		}
+		http.Error(w, "Error interno al cargar datos", http.StatusInternalServerError)
+		return
+	}
+
+	html := views.MovimientoEditForm(mov)
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	html.Render(r.Context(), w)
+}
+
 func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" || r.Method != http.MethodGet {
 		http.NotFound(w, r)
@@ -39,37 +62,15 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Error interno del servidor al cargar datos", http.StatusInternalServerError)
 		return
 	}
-
+	// Lista de todos los movimientos
 	comp := views.Container(movimientos)
 	templ.Handler(views.Layout("MovFinanzas", comp)).ServeHTTP(w, r)
 
 }
 
-func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. Extraer ID de la URL
-	idStr := strings.TrimPrefix(r.URL.Path, "/movimientos/edit/")
-	id, _ := strconv.Atoi(idStr)
-
-	// 2. Buscar información del movimiento
-	mov, err := h.logic.GetMovimientoLogic(r.Context(), int32(id))
-	if err != nil {
-		http.Error(w, "Movimiento no encontrado", http.StatusNotFound)
-		return
-	}
-
-	// 3. Renderizar el templ
-	html := views.MovimientoEditForm(mov)
-
-	// 4. Devolver contenido
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	html.Render(r.Context(), w)
-}
-
 // /////////////////////////////////////////////// --->  /MOVIMIENTOS
 func (q *MovimientoWebHandler) MovimientosHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	//case http.MethodGet:
-	//q.getMovimientos(w, r)
 	case http.MethodPost:
 		q.PostMovimiento(w, r)
 	default:
@@ -77,6 +78,7 @@ func (q *MovimientoWebHandler) MovimientosHandler(w http.ResponseWriter, r *http
 	}
 }
 
+// ///////////////////////// -> CrearMovimiento
 func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Request) {
 	var newMovimiento sqlc.CreateMovimientoParams
 	if err := r.ParseForm(); err != nil {
@@ -110,9 +112,23 @@ func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Req
 	_, err2 := h.logic.CreateMovimientoLogic(r.Context(), newMovimiento)
 
 	if err2 != nil {
-		http.Error(w, "Error guardando en base de datos", http.StatusInternalServerError)
+		log.Printf("Error de lógica al crear: %v", err2)
+
+		// Verificar si el error es por una regla de negocio específica (monto/fecha)
+		if strings.Contains(err2.Error(), "el monto del movmiento no puede ser menor o igual a 0") ||
+			strings.Contains(err2.Error(), "la fecha debe ser menor a la actual") {
+
+			// Si es un error de validación de negocio, respondemos 400
+			http.Error(w, "Error de validación: "+err2.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// Si es cualquier otro error (BD, conexión, etc.), devolvemos 500
+		http.Error(w, "Error interno del servidor al guardar: "+err2.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -150,6 +166,8 @@ func (h *MovimientoWebHandler) MovimientoHandler(w http.ResponseWriter, r *http.
 	}
 }
 
+// ///////////////////////// -> UPDATE
+
 func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.Request, id int) {
 	var newMovimiento sqlc.UpdateMovimientoParams
 	if err := r.ParseForm(); err != nil {
@@ -161,14 +179,10 @@ func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.R
 	montoStr := r.FormValue("monto")
 	sanitizedStr := strings.ReplaceAll(montoStr, ",", ".")
 
-	// 3. Conversión
 	monto, err := strconv.ParseFloat(sanitizedStr, 64)
 
-	// 4. Manejar el error de conversión (crucial para evitar fallos)
 	if err != nil {
-		// Si err no es nil, el valor no era un número válido.
 		fmt.Printf("Error de formato: %v. El valor original era: %s\n", err, monto)
-		// Aquí deberías responder con un error 400 Bad Request
 		return
 	}
 	if !logic.MontoValido(monto) {
@@ -190,10 +204,13 @@ func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.R
 	}
 	newMovimiento.FechaMovimiento = fecha
 
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
 	h.logic.UpdateMovimientoLogic(r.Context(), newMovimiento)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+// ///////////////////////// -> DELETE
 func (h *MovimientoWebHandler) deleteMov(w http.ResponseWriter, r *http.Request, id int) {
 	err := h.logic.DeleteMovimientoLogic(r.Context(), int32(id))
 
@@ -201,5 +218,7 @@ func (h *MovimientoWebHandler) deleteMov(w http.ResponseWriter, r *http.Request,
 		http.Error(w, err.Error(), http.StatusNoContent)
 		return
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
