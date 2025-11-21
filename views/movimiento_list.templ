@@ -31,7 +31,7 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                         </div>
                         <br/>
                            <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET" style="display:inline;">
-                                <button type="submit" class="btn-borrar">Editar</button>
+                                <button type="submit" class="btn-editar">Editar</button>
                             </form>
                             <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
                                 <input type="hidden" name="_method" value="DELETE"/>
