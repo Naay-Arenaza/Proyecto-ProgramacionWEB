@@ -1,0 +1,114 @@
+/* === GENERAL === */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #1a202c;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* === CARD DEL FORMULARIO === */
+.form-card {
+    background-color: #2d3748;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 450px;
+
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+                0 4px 6px -2px rgba(0,0,0,0.05);
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.form-card h2 {
+    text-align: center;
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(66,153,225,0.25);
+}
+
+/* === FORMULARIO === */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #a0aec0;
+    font-size: 0.875rem;
+}
+
+input[type="number"],
+input[type="text"],
+input[type="date"],
+select {
+    padding: 12px 15px;
+    background-color: #1a202c;
+    border: 2px solid #4a5568;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #e2e8f0;
+    transition: all 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66,153,225,0.3);
+}
+
+/* === BOTONES === */
+.btn-borrar {
+    background-color: #4299e1;
+    color: #1a202c;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-borrar:hover {
+    background-color: #63b3ed;
+    transform: translateY(-2px);
+}
+
+/* Botón cancelar con estilo distinto */
+form[action="/"] .btn-borrar {
+    background-color: #f56565;
+}
+
+form[action="/"] .btn-borrar:hover {
+    background-color: #e53e3e;
+}
+
+.form-card {
+    gap: 2rem; /* antes era 1.2rem */
+}
+
+.form-group {
+    margin-bottom: 1.4rem; /* agrega espacio extra entre campos */
+}
+
+.form-card h2 {
+    margin-bottom: 1.5rem; /* separa el título del formulario */
+}
+
+.btn-borrar {
+    margin-top: 1rem; /* añade espacio antes del botón */
+}

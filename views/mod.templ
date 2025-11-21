@@ -12,8 +12,9 @@ templ MovimientoEditForm(mov sqlc.Movimiento) {
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link rel="stylesheet" href="/static/styles.css"/>
-		<title>{ "UPDATE" }</title>
+		<link rel="icon" type="image/png" href="/static/icono.png"/>
+		<link rel="stylesheet" href="/static/stylesAct.css"/>
+		<title>{ "Actualizar" }</title>
 	</head>
     <body>
         <div class="form-card">
@@ -25,15 +26,22 @@ templ MovimientoEditForm(mov sqlc.Movimiento) {
                             <label>Monto:</label>
                             <input type="number" step="any" name="monto" value={ fmt.Sprintf("%.2f", mov.Monto) } required/>
                         </div>
+                            <div class="form-group">
+                                <label>Tipo:</label>
+                                <select name="tipo" required>
+                                    if strings.ToUpper(strings.TrimSpace(mov.Tipo)) == "I" {
+                                        <option value="I" selected>Ingreso</option>
+                                    } else {
+                                        <option value="I">Ingreso</option>
+                                    }
 
-                        <div class="form-group">
-                            <label>Tipo:</label>
-                            <select name="tipo" required>
-                                <option value="I" selected={ strings.ToUpper(strings.TrimSpace(mov.Tipo)) == "I" }>Ingreso</option>
-                                <option value="G" selected={ strings.ToUpper(strings.TrimSpace(mov.Tipo)) == "G" }>Gasto</option>
-                            </select>
-                        </div>
-
+                                    if strings.ToUpper(strings.TrimSpace(mov.Tipo)) == "G" {
+                                        <option value="G" selected>Gasto</option>
+                                    } else {
+                                        <option value="G">Gasto</option>
+                                    }
+                                </select>
+                            </div>
                         <div class="form-group">
                             <label>Descripción:</label>
                             <input type="text" name="descripcion" value={ mov.Descripcion.String }/>
