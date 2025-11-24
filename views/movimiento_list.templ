@@ -17,7 +17,7 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                 <div class="no-movimientos">No hay movimientos registrados</div>
             } else {
                 for _, mov := range movimientos {
-                    <div class={ "movimiento-" + obtenerClase(mov.Tipo) + "-flex" }>
+                    <div class={ "item-movimiento","movimiento-" + obtenerClase(mov.Tipo) + "-flex" }>
                         <div class="movimiento-detalles">
                             <span class="fecha"> Fecha: { formatearFecha(mov.FechaMovimiento) }</span>
                             <br/>
@@ -33,9 +33,16 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                            <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET" style="display:inline;">
                                 <button type="submit" class="btn-borrar">Editar</button>
                             </form>
-                            <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" class="btn-borrar">Borrar</button>
+                            <form 
+                                action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } 
+                                method="POST" 
+                                style="display:inline;"
+                                hx-post={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) }
+                                hx-target="closest .item-movimiento"
+                                hx-swap="outerHTML"
+                                hx-confirm="¿Estás seguro de que deseas eliminar este movimiento?">
+                                <input type="hidden" name="_method" value="DELETE"/> 
+                                <button type="submit" class="btn-borrar">Borrar</button> 
                             </form>
                         <br/><br/>
                     </div>
@@ -45,7 +52,6 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
     </div>
 }
 
-// Helpers para lógica de vista (lo que antes hacías en JS)
 func obtenerClase(tipo string) string {
     if tipo == "I" { return "ingreso" }
     return "gasto"

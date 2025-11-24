@@ -50,7 +50,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 			}
 		} else {
 			for _, mov := range movimientos {
-				var templ_7745c5c3_Var2 = []any{"movimiento-" + obtenerClase(mov.Tipo) + "-flex"}
+				var templ_7745c5c3_Var2 = []any{"item-movimiento", "movimiento-" + obtenerClase(mov.Tipo) + "-flex"}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -175,19 +175,32 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var12 templ.SafeURL
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 36, Col: 106}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 37, Col: 104}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" method=\"POST\" style=\"display:inline;\"><input type=\"hidden\" name=\"_method\" value=\"DELETE\"> <button type=\"submit\" class=\"btn-borrar\">Borrar</button></form><br><br></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" method=\"POST\" style=\"display:inline;\" hx-post=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var13 string
+				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 40, Col: 105}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" hx-target=\"closest .item-movimiento\" hx-swap=\"outerHTML\" hx-confirm=\"¿Estás seguro de que deseas eliminar este movimiento?\"><input type=\"hidden\" name=\"_method\" value=\"DELETE\"> <button type=\"submit\" class=\"btn-borrar\">Borrar</button></form><br><br></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -195,7 +208,6 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 	})
 }
 
-// Helpers para lógica de vista (lo que antes hacías en JS)
 func obtenerClase(tipo string) string {
 	if tipo == "I" {
 		return "ingreso"

@@ -138,7 +138,6 @@ func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Req
 		http.Error(w, "Error al renderizar la lista: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 }
 
 // /////////////////////////////////////////////// --->  /MOVIMIENTO/
@@ -158,18 +157,11 @@ func (h *MovimientoWebHandler) MovimientoHandler(w http.ResponseWriter, r *http.
 
 	switch r.Method {
 	// case http.MethodGet:
-	// 	h.getMov(w, r, id)
+	//     h.getMov(w, r, id)
 	case http.MethodPost:
-		metodoReal := r.FormValue("_method")
-
-		switch metodoReal {
-		case "DELETE":
-			h.deleteMov(w, r, id)
-		case "PUT":
-			h.updateMovimiento(w, r, id) // Asumiendo que tienes esta función
-		default:
-			http.Error(w, "Accion no soportada", http.StatusBadRequest)
-		}
+		h.updateMovimiento(w, r, id)
+	case http.MethodDelete:
+		h.deleteMov(w, r, id)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -228,6 +220,5 @@ func (h *MovimientoWebHandler) deleteMov(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
