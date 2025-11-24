@@ -5,7 +5,14 @@ templ MovimientoForm() {
         <div class="titulo-creacion-movimiento">
             <h2 id="titulo-crear-movimiento">Crear Movimiento</h2>
         </div>
-        <form action="/movimientos" method="POST" id="form-movimiento">
+        <form 
+            action="/movimientos" 
+            method="POST" 
+            id="form-movimiento"
+            hx-post="/movimientos"                 
+            hx-target="#lista_movimientos"         
+            hx-swap="outerHTML"                   
+        >
             <div class="form-group">
                 <label for="monto_mov">Monto:</label>
                 <input type="number" step="any" name="monto" id="monto_mov" placeholder="Ej: 150.50" class="form-input" required/>

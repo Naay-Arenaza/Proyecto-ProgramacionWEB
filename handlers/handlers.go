@@ -126,8 +126,19 @@ func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	movimientos, err := h.logic.ListMovimientoAllLogic(r.Context())
+
+	if err != nil {
+		http.Error(w, "Error al obtener movimientos: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	if err := views.MovimientoList(movimientos).Render(r.Context(), w); err != nil {
+		http.Error(w, "Error al renderizar la lista: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 }
 
 // /////////////////////////////////////////////// --->  /MOVIMIENTO/
