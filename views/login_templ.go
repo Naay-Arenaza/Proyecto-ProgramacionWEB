@@ -29,7 +29,7 @@ func Login() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html><head><title>Ingreso al Sistema</title><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script></head><body><div class=\"login-container\"><h2>Iniciar Sesión</h2><form hx-post=\"/signin\" hx-swap=\"outerHTML\"><div><label>Usuario (Email):</label> <input type=\"text\" name=\"usuario\" placeholder=\"email@ejemplo.com\" required></div><div><label>Contraseña:</label> <input type=\"password\" name=\"password\" required></div><button type=\"submit\">Entrar</button><div id=\"mensaje-error\"></div></form></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/stylesLogin.css\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script><title>Iniciar Sesión</title></head><body><div class=\"form-card\"><h2>Bienvenido</h2><form hx-post=\"/signin\" hx-target=\"#feedback-login\" hx-swap=\"innerHTML\"><div class=\"form-group\"><label for=\"usuario\">Usuario (Email):</label> <input type=\"text\" id=\"usuario\" name=\"usuario\" placeholder=\"ejemplo@correo.com\" required></div><div class=\"form-group\"><label for=\"password\">Contraseña:</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"btn-ingresar\">Ingresar</button><div id=\"feedback-login\"></div></form></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
