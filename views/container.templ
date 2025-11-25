@@ -12,11 +12,16 @@ templ Container(movimientos []sqlc.Movimiento) {
             </div>
             <div class="sidebar item-grid">
                 @MovimientoForm()
-        </div>
+            </div>
             <div class="content item-grid">
                 <h2 id="titulo-listado-movimientos">Listado de Movimientos</h2>
                         @MovimientoList(movimientos)
             </div> 
+        <div>
+        <button hx-get="/logout" class="btn-borrar">
+            Cerrar Sesión
+        </button>
+        </div>
         </div>
     </main>
 }

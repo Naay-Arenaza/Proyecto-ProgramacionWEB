@@ -47,7 +47,7 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 	// Validar la sesión en el servidor el mapa
 	userSession, exists := sessions[sessionToken]
 	if !exists || userSession.IsExpired() {
-		w.WriteHeader(http.StatusUnauthorized)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
@@ -63,8 +63,17 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 	templ.Handler(views.Layout("MovFinanzas", comp)).ServeHTTP(w, r)
 }
 
+func (h *MovimientoWebHandler) Logout(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session_token",
+		Value:   "",
+		Expires: time.Now(), // Expira inmediatamente
+	})
+	w.Header().Set("HX-Redirect", "/login")
+	w.WriteHeader(http.StatusOK)
+}
+
 func (h *MovimientoWebHandler) ShowLogin(w http.ResponseWriter, r *http.Request) {
-	// Renderizamos el componente que creamos arriba
 	views.Login().Render(r.Context(), w)
 }
 
@@ -115,7 +124,7 @@ func (h *MovimientoWebHandler) Signin(w http.ResponseWriter, r *http.Request) {
 		Value:   sessionToken,
 		Expires: expiresAt,
 	})
-	w.Header().Set("HX-Redirect", "/") // O la ruta que quieras
+	w.Header().Set("HX-Redirect", "/")
 	w.WriteHeader(http.StatusOK)
 }
 
