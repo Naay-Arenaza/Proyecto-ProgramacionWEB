@@ -1,0 +1,33 @@
+package views
+
+templ Login() {
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Ingreso al Sistema</title>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        </head>
+    <body>
+        <div class="login-container">
+            <h2>Iniciar Sesión</h2>
+            
+            <form hx-post="/signin" hx-swap="outerHTML">
+                
+                <div>
+                    <label>Usuario (Email):</label>
+                    <input type="text" name="usuario" placeholder="email@ejemplo.com" required/>
+                </div>
+
+                <div>
+                    <label>Contraseña:</label>
+                    <input type="password" name="password" required/>
+                </div>
+
+                <button type="submit">Entrar</button>
+                
+                <div id="mensaje-error"></div>
+            </form>
+        </div>
+    </body>
+    </html>
+}

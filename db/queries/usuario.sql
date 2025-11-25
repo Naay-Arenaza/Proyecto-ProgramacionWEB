@@ -5,3 +5,7 @@ RETURNING *;
 
 -- name: GetUsuario :one
 SELECT * FROM Usuario WHERE id_usuario = $1;
+
+-- name: GetUsuarioMail :one
+SELECT * FROM Usuario WHERE email = $1;
+

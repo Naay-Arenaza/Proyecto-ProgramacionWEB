@@ -9,6 +9,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// La estructura de una sesión
+type Session struct {
+	UserID   int32
+	Username string
+	Expiry   time.Time
+}
+
 type MovCapaLogica struct {
 	querie *sqlc.Queries
 }
@@ -19,8 +26,16 @@ func NewMovimientoLogic(q *sqlc.Queries) *MovCapaLogica {
 	}
 }
 
+func (l *MovCapaLogica) GetUsuarioMail(ctx context.Context, mail string) (sqlc.Usuario, error) {
+	return l.querie.GetUsuarioMail(ctx, mail)
+}
+
 func (l *MovCapaLogica) ListMovimientoAllLogic(ctx context.Context) ([]sqlc.Movimiento, error) {
 	return l.querie.ListMovimientoAll(ctx)
+}
+
+func (l *MovCapaLogica) ListMovimientoUser(ctx context.Context, idUser int32) ([]sqlc.Movimiento, error) {
+	return l.querie.ListMovimiento(ctx, idUser)
 }
 
 func (l *MovCapaLogica) CreateMovimientoLogic(ctx context.Context, arg sqlc.CreateMovimientoParams) (sqlc.Movimiento, error) {
@@ -71,4 +86,9 @@ func EsFechaValida(fechaIngresada time.Time) bool {
 		return false
 	}
 	return true
+}
+
+// Método para verificar si la sesión ha expirado
+func (s Session) IsExpired() bool {
+	return s.Expiry.Before(time.Now())
 }

@@ -12,20 +12,12 @@ func formatearFecha(t time.Time) string {
 
 templ MovimientoList(movimientos []sqlc.Movimiento) {
     <div class="tarjeta-movimientos-flex">
-        <div>
-            <label for="filtro_movs">Ordenar por:</label>
-                <select name="filtro_movs" id="filtro_movs" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="G">Gasto</option>
-                    <option value="I">Ingreso</option>
-                </select>
-        </div>
         <div id="lista_movimientos">
             if len(movimientos) == 0 {
                 <div class="no-movimientos">No hay movimientos registrados</div>
             } else {
                 for _, mov := range movimientos {
-                    <div class={ "movimiento-" + obtenerClase(mov.Tipo) + "-flex" }>
+                    <div class={ "item-movimiento","movimiento-" + obtenerClase(mov.Tipo) + "-flex" }>
                         <div class="movimiento-detalles">
                             <span class="fecha"> Fecha: { formatearFecha(mov.FechaMovimiento) }</span>
                             <br/>
@@ -38,13 +30,19 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                             <span class="gasto"> Tipo de Gasto: { obtenerTexto(mov.Tipo) }</span>
                         </div>
                         <br/>
-                           <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET" style="display:inline;">
+                           <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET">
                                 <button type="submit" class="btn-editar">Editar</button>
                             </form>
-                            <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } method="POST" style="display:inline;">
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" class="btn-borrar">Borrar</button>
-                            </form>
+                            <div>
+                                <button 
+                                    hx-delete={ fmt.Sprintf("/movimientos/%d", mov.IDMovimiento) }
+                                    hx-target="closest .item-movimiento"
+                                    hx-swap="outerHTML"
+                                    hx-confirm="¿Estás seguro de que deseas eliminar este movimiento?"
+                                    class="btn-borrar">
+                                    Borrar
+                                </button>
+                            </div>
                         <br/><br/>
                     </div>
                 }

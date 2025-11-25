@@ -39,7 +39,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"tarjeta-movimientos-flex\"><div><label for=\"filtro_movs\">Ordenar por:</label> <select name=\"filtro_movs\" id=\"filtro_movs\" required><option value=\"\">Seleccionar...</option> <option value=\"G\">Gasto</option> <option value=\"I\">Ingreso</option></select></div><div id=\"lista_movimientos\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"tarjeta-movimientos-flex\"><div id=\"lista_movimientos\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,7 +50,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 			}
 		} else {
 			for _, mov := range movimientos {
-				var templ_7745c5c3_Var2 = []any{"movimiento-" + obtenerClase(mov.Tipo) + "-flex"}
+				var templ_7745c5c3_Var2 = []any{"item-movimiento", "movimiento-" + obtenerClase(mov.Tipo) + "-flex"}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -75,7 +75,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(formatearFecha(mov.FechaMovimiento))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 30, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 22, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -88,7 +88,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(mov.Descripcion.String)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 32, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 24, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -123,7 +123,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(obtenerSimbolo(mov.Tipo))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 35, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 27, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -136,7 +136,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f", mov.Monto))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 35, Col: 100}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 27, Col: 100}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -149,7 +149,7 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(obtenerTexto(mov.Tipo))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 38, Col: 88}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 30, Col: 88}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -162,26 +162,26 @@ func MovimientoList(movimientos []sqlc.Movimiento) templ.Component {
 				var templ_7745c5c3_Var11 templ.SafeURL
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 41, Col: 110}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 33, Col: 110}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" method=\"GET\" style=\"display:inline;\"><button type=\"submit\" class=\"btn-editar\">Editar</button></form><form action=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" method=\"GET\"><button type=\"submit\" class=\"btn-editar\">Editar</button></form><div><button hx-delete=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var12 templ.SafeURL
-				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)))
+				var templ_7745c5c3_Var12 string
+				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 44, Col: 106}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/movimiento_list.templ`, Line: 38, Col: 96}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" method=\"POST\" style=\"display:inline;\"><input type=\"hidden\" name=\"_method\" value=\"DELETE\"> <button type=\"submit\" class=\"btn-borrar\">Borrar</button></form><br><br></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-target=\"closest .item-movimiento\" hx-swap=\"outerHTML\" hx-confirm=\"¿Estás seguro de que deseas eliminar este movimiento?\" class=\"btn-borrar\">Borrar</button></div><br><br></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

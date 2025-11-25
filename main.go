@@ -31,6 +31,11 @@ func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 
+	http.HandleFunc("/login", movWebHandler.ShowLogin)
+	http.HandleFunc("/signin", movWebHandler.Signin)
+	//http.HandleFunc("/welcome", movWebHandler.Welcome)
+	//http.HandleFunc("/refresh", movWebHandler.Refresh)
+	//http.HandleFunc("/logout", movWebHandler.Logout)
 	http.HandleFunc("/", movWebHandler.ServeForm)
 	http.HandleFunc("/movimientos/edit/", movWebHandler.EditMovimientoHandler)
 	http.HandleFunc("/movimientos", movWebHandler.MovimientosHandler)

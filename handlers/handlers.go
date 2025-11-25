@@ -15,34 +15,17 @@ import (
 	"time"
 
 	"github.com/a-h/templ"
+	"github.com/google/uuid"
 )
 
 type MovimientoWebHandler struct {
 	logic *logic.MovCapaLogica
 }
 
+var sessions = map[string]logic.Session{}
+
 func NewMovimientoWebHandler(l *logic.MovCapaLogica) *MovimientoWebHandler {
 	return &MovimientoWebHandler{logic: l}
-}
-
-func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) {
-	idStr := strings.TrimPrefix(r.URL.Path, "/movimientos/edit/")
-	id, _ := strconv.Atoi(idStr)
-
-	mov, err := h.logic.GetMovimientoLogic(r.Context(), int32(id))
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			http.NotFound(w, r) // Si no se encuentra en la BD, devolvemos 404
-			return
-		}
-		http.Error(w, "Error interno al cargar datos", http.StatusInternalServerError)
-		return
-	}
-
-	html := views.MovimientoEditForm(mov)
-	log.Printf("DEBUG: Cargando Movimiento ID %d, TIPO: '%s'", mov.IDMovimiento, mov.Tipo)
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	html.Render(r.Context(), w)
 }
 
 func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request) {
@@ -50,10 +33,25 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 		http.NotFound(w, r)
 		return
 	}
-
 	ctx := context.Background()
 
-	movimientos, err := h.logic.ListMovimientoAllLogic(ctx)
+	// Obtener la cookie de la petición
+	c, err := r.Cookie("session_token")
+	if err != nil {
+		// Si no tiene llave, lo mandamos al login
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+	sessionToken := c.Value
+
+	// Validar la sesión en el servidor el mapa
+	userSession, exists := sessions[sessionToken]
+	if !exists || userSession.IsExpired() {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	movimientos, err := h.logic.ListMovimientoUser(ctx, userSession.UserID)
 
 	if err != nil {
 		log.Printf("Error al cargar movimientos: %v", err)
@@ -63,7 +61,62 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 	// Lista de todos los movimientos + createFrom
 	comp := views.Container(movimientos)
 	templ.Handler(views.Layout("MovFinanzas", comp)).ServeHTTP(w, r)
+}
 
+func (h *MovimientoWebHandler) ShowLogin(w http.ResponseWriter, r *http.Request) {
+	// Renderizamos el componente que creamos arriba
+	views.Login().Render(r.Context(), w)
+}
+
+func (h *MovimientoWebHandler) Signin(w http.ResponseWriter, r *http.Request) {
+
+	// 1. Procesar el formulario que viene del navegador
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Error al leer datos", http.StatusBadRequest)
+		return
+	}
+
+	usuario := r.FormValue("usuario")   // Coincide con name="usuario"
+	password := r.FormValue("password") // Coincide con name="password"
+
+	// 3. Validar (Lógica ficticia)
+	// Aquí llamarías a tu base de datos para ver si el usuario existe
+	usuarioStruct, err := h.logic.GetUsuarioMail(r.Context(), usuario)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// El email no existe. Devolvemos 200.
+			// para que HTMX lo muestre en el div de error.
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		// CASO: Error real de base de datos (se cayó el servidor, etc)
+		http.Error(w, "Error de servidor: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if password != usuarioStruct.Contraseña {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// Crear un nuevo token de sesión aleatorio
+	sessionToken := uuid.NewString()
+	expiresAt := time.Now().Add(240 * time.Second)
+
+	// Almacenar la sesión en el mapa del servidor
+	sessions[sessionToken] = logic.Session{
+		UserID:   usuarioStruct.IDUsuario,
+		Username: usuario,
+		Expiry:   expiresAt,
+	}
+
+	// Enviar la cookie al cliente
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session_token",
+		Value:   sessionToken,
+		Expires: expiresAt,
+	})
+	w.Header().Set("HX-Redirect", "/") // O la ruta que quieras
+	w.WriteHeader(http.StatusOK)
 }
 
 // /////////////////////////////////////////////// --->  /MOVIMIENTOS
@@ -83,8 +136,23 @@ func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Req
 		http.Error(w, "Error parseando formulario", http.StatusBadRequest)
 		return
 	}
+	// Obtener la cookie de la petición
+	c, err := r.Cookie("session_token")
+	if err != nil {
+		// Si no tiene llave, lo mandamos al login
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+	sessionToken := c.Value
 
-	newMovimiento.IDUsuario = 1
+	// Validar la sesión en el servidor el mapa
+	userSession, exists := sessions[sessionToken]
+	if !exists || userSession.IsExpired() {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	UserID := userSession.UserID
+	newMovimiento.IDUsuario = UserID
 	newMovimiento.Tipo = r.FormValue("tipo")
 	monto, err1 := strconv.ParseFloat(r.FormValue("monto"), 64)
 
@@ -125,9 +193,11 @@ func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Req
 		http.Error(w, "Error interno del servidor al guardar: "+err2.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	movimientos, err := h.logic.ListMovimientoUser(r.Context(), UserID)
+	if err != nil {
+		return
+	}
+	views.MovimientoList(movimientos).Render(r.Context(), w)
 }
 
 // /////////////////////////////////////////////// --->  /MOVIMIENTO/
@@ -149,16 +219,9 @@ func (h *MovimientoWebHandler) MovimientoHandler(w http.ResponseWriter, r *http.
 	// case http.MethodGet:
 	// 	h.getMov(w, r, id)
 	case http.MethodPost:
-		metodoReal := r.FormValue("_method")
-
-		switch metodoReal {
-		case "DELETE":
-			h.deleteMov(w, r, id)
-		case "PUT":
-			h.updateMovimiento(w, r, id) // Asumiendo que tienes esta función
-		default:
-			http.Error(w, "Accion no soportada", http.StatusBadRequest)
-		}
+		h.updateMovimiento(w, r, id) // Asumiendo que tienes esta función
+	case http.MethodDelete:
+		h.deleteMov(w, r, id)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -208,6 +271,26 @@ func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.R
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) {
+	idStr := strings.TrimPrefix(r.URL.Path, "/movimientos/edit/")
+	id, _ := strconv.Atoi(idStr)
+
+	mov, err := h.logic.GetMovimientoLogic(r.Context(), int32(id))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			http.NotFound(w, r) // Si no se encuentra en la BD, devolvemos 404
+			return
+		}
+		http.Error(w, "Error interno al cargar datos", http.StatusInternalServerError)
+		return
+	}
+
+	html := views.MovimientoEditForm(mov)
+	log.Printf("DEBUG: Cargando Movimiento ID %d, TIPO: '%s'", mov.IDMovimiento, mov.Tipo)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	html.Render(r.Context(), w)
+}
+
 // ///////////////////////// -> DELETE
 func (h *MovimientoWebHandler) deleteMov(w http.ResponseWriter, r *http.Request, id int) {
 	err := h.logic.DeleteMovimientoLogic(r.Context(), int32(id))
@@ -218,5 +301,5 @@ func (h *MovimientoWebHandler) deleteMov(w http.ResponseWriter, r *http.Request,
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
