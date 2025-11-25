@@ -8,11 +8,9 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import (
-	sqlc "ProyectoFinanzas/db/sqlc"
-)
+import ()
 
-func Container(movimientos []sqlc.Movimiento) templ.Component {
+func SigninPage(errMsg string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -33,23 +31,7 @@ func Container(movimientos []sqlc.Movimiento) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<main><div class=\"contenedor-grid\"><div class=\"header item-grid\"><h1 id=\"main-title\">Gestion de Movimientos</h1></div><div class=\"sidebar item-grid\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = MovimientoForm().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"content item-grid\"><h2 id=\"titulo-listado-movimientos\">Listado de Movimientos</h2>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = MovimientoList(movimientos).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><button hx-get=\"/logout\" class=\"btn-borrar\">Cerrar Sesión</button></div></main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/stylesLogin.css\"><link rel=\"icon\" type=\"image/png\" href=\"/static/icono.png\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script><title>Iniciar Sesión</title></head><body><div class=\"form-card\"><h2>Bienvenido</h2><form hx-post=\"/signin\" hx-swap=\"innerHTML\"><div class=\"form-group\"><label for=\"usuario\">Usuario(Email):</label> <input type=\"text\" id=\"usuario\" name=\"usuario\" placeholder=\"ejemplo@correo.com\" required></div><div class=\"form-group\"><label for=\"password\">Contraseña:</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"btn-ingresar\">Ingresar</button></form></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

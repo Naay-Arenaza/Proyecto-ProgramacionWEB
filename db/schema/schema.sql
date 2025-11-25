@@ -18,10 +18,19 @@ CREATE TABLE Movimiento (
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
+CREATE TABLE Session (
+    session_token VARCHAR(36) PRIMARY KEY NOT NULL,
+    id_usuario INT NOT NULL ,
+    username VARCHAR(36),
+    expires TIMESTAMP WITH TIME ZONE NOT NULL, 
+    
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE
+);
+
 INSERT INTO Usuario (nombre, apellido, email, contraseña)
 VALUES
-('Ana', 'García', 'ana.garcia@example.com', 'hash123'),
-('Bruno', 'López', 'bruno.lopez@example.com', 'hash456');
+('Ana', 'García', 'ana@gmail.com', '123'),
+('Bruno', 'López', 'lopez@gmail.com', '123');
 
 INSERT INTO Movimiento (id_usuario, monto, tipo, descripcion, fecha_movimiento)
 VALUES

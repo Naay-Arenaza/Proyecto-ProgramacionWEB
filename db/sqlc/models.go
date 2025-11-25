@@ -18,6 +18,13 @@ type Movimiento struct {
 	FechaMovimiento time.Time      `json:"fecha_movimiento"`
 }
 
+type Session struct {
+	SessionToken string         `json:"session_token"`
+	IDUsuario    int32          `json:"id_usuario"`
+	Username     sql.NullString `json:"username"`
+	Expires      time.Time      `json:"expires"`
+}
+
 type Usuario struct {
 	IDUsuario     int32        `json:"id_usuario"`
 	Nombre        string       `json:"nombre"`

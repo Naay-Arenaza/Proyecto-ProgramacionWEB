@@ -55,10 +55,11 @@ test-Op-CRUD:
 	@echo "--> Ejecutando test de las operaciones CRUD: "
 	@go test -v 
 
-test-Prueba-HURL:
+test-PruebaMovAut-HURL:
 	@echo "--> Ejecutando pruebas API: "
 	@/usr/bin/hurl --test requests.hurl
 
+
 tests: 
 	@make test-Op-CRUD
-	@make test-Prueba-API
+	@make test-PruebaMovAut-HURL

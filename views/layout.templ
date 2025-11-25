@@ -11,7 +11,7 @@ templ Layout(title string, comp templ.Component) {
 		<link rel="stylesheet" href="/static/styles.css"/>
 		<title>{ title }</title>
 	</head>
-		<body>
+		<body hx-get="/refresh" hx-trigger="every 15m" hx-swap="none">
 			@comp
 		</body>
 	</html>

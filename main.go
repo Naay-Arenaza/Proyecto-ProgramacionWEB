@@ -22,19 +22,25 @@ func main() {
 
 	queries := sqlc.New(db)
 
-	movLogic := logic.NewMovimientoLogic(queries) // -> Capa Logica
+	movLogic := logic.NewMovimientoLogic(queries)
 
-	movWebHandler := handlers.NewMovimientoWebHandler(movLogic)
+	userLogic := logic.NewUserLogic(queries)
+
+	movWebHandler := handlers.NewMovimientoWebHandler(movLogic, userLogic)
 
 	//Abrir el servidor
 	staticDir := "./static"
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 
-	http.HandleFunc("/", movWebHandler.ServeForm)
-	http.HandleFunc("/movimientos/edit/", movWebHandler.EditMovimientoHandler)
-	http.HandleFunc("/movimientos", movWebHandler.MovimientosHandler)
-	http.HandleFunc("/movimientos/", movWebHandler.MovimientoHandler)
+	http.HandleFunc("/signin", movWebHandler.Signin)
+	http.HandleFunc("/refresh", movWebHandler.AuthMiddleware(movWebHandler.RefreshHandler))
+	http.HandleFunc("/logout", movWebHandler.AuthMiddleware(movWebHandler.LogoutHandler))
+
+	http.HandleFunc("/", movWebHandler.AuthMiddleware(movWebHandler.ServeForm))
+	http.HandleFunc("/movimientos/edit/", movWebHandler.AuthMiddleware(movWebHandler.EditMovimientoHandler))
+	http.HandleFunc("/movimientos", movWebHandler.AuthMiddleware(movWebHandler.MovimientosHandler))
+	http.HandleFunc("/movimientos/", movWebHandler.AuthMiddleware(movWebHandler.MovimientoHandler))
 
 	port := ":8080"
 	fmt.Printf("Servidor ESTÁTICO escuchando en http://localhost%s\n", port)

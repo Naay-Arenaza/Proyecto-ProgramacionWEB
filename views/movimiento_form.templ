@@ -11,7 +11,8 @@ templ MovimientoForm() {
             id="form-movimiento"
             hx-post="/movimientos"                 
             hx-target="#lista_movimientos"         
-            hx-swap="outerHTML"                   
+            hx-swap="outerHTML"       
+            hx-on::after-request="if(event.detail.successful) this.reset()"            
         >
             <div class="form-group">
                 <label for="monto_mov">Monto:</label>

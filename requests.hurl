@@ -1,3 +1,23 @@
+# 1. Iniciar sesión y obtener la cookie de sesión
+POST http://localhost:8080/signin
+[FormParams]
+usuario: ana@gmail.com
+password: 123
+HTTP 200
+###
+
+# 2. Acceder a la ruta protegida (hURL maneja la cookie automáticamente)
+GET http://localhost:8080/
+HTTP 200
+[Asserts]
+# Validamos que el título de la página sea el correcto
+body contains "MovFinanzas"
+# Validamos que aparezca el título principal 
+body contains "Gestion de Movimientos"
+# Validamos que aparezca el botón de cerrar sesión
+body contains "Cerrar Sesión"
+###
+
 # 1. CREAR UN MOVIMIENTO (POST)
 POST http://localhost:8080/movimientos
 Content-Type: application/x-www-form-urlencoded
@@ -6,8 +26,7 @@ monto: 1200.00
 tipo: I
 descripcion: Movimiento Base para Test
 fechaMovimiento: 2025-11-20
-
-HTTP 303
+HTTP 200
 
 # 2. INTENTAR CREAR CON ERROR DE MONTO
 POST http://localhost:8080/movimientos
@@ -55,16 +74,16 @@ fechaMovimiento: 2025-11-19
 HTTP 303
 
 # 6. ELIMINAR EL MOVIMIENTO (POST con _method=DELETE)
-POST http://localhost:8080/movimientos/{{mov_id_captured}}
+DELETE http://localhost:8080/movimientos/{{mov_id_captured}}
 Content-Type: application/x-www-form-urlencoded
-[FormParams]
-_method: DELETE
 
-HTTP 303
-
-# 7. VERIFICAR ELIMINACIÓN
-#    Verificar que el texto de la actualización (5000) ya no aparece.
-GET http://localhost:8080/
 HTTP 200
-[Asserts]
-body not contains "Gasto actualizado Hurl (5000)"
+
+# 3. Refrescar la sesión (obtiene una nueva cookie)
+POST http://localhost:8080/refresh
+HTTP 200
+###
+
+# 4. Cerrar la sesión
+GET http://localhost:8080/logout
+HTTP 200

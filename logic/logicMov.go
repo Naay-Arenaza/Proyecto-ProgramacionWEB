@@ -1,7 +1,7 @@
 package logic
 
 import (
-	sqlc "ProyectoFinanzas/db/sqlc"
+	db "ProyectoFinanzas/db/sqlc"
 	"context"
 	"errors"
 	"time"
@@ -10,51 +10,55 @@ import (
 )
 
 type MovCapaLogica struct {
-	querie *sqlc.Queries
+	repo MovimientoRepository
 }
 
-func NewMovimientoLogic(q *sqlc.Queries) *MovCapaLogica {
+func NewMovimientoLogic(r MovimientoRepository) *MovCapaLogica {
 	return &MovCapaLogica{
-		querie: q,
+		repo: r,
 	}
 }
 
-func (l *MovCapaLogica) ListMovimientoAllLogic(ctx context.Context) ([]sqlc.Movimiento, error) {
-	return l.querie.ListMovimientoAll(ctx)
+func (l *MovCapaLogica) ListMovimientoAllLogic(ctx context.Context) ([]db.Movimiento, error) {
+	return l.repo.ListMovimientoAll(ctx)
 }
 
-func (l *MovCapaLogica) CreateMovimientoLogic(ctx context.Context, arg sqlc.CreateMovimientoParams) (sqlc.Movimiento, error) {
+func (l *MovCapaLogica) ListMovimientoLogic(ctx context.Context, id int32) ([]db.Movimiento, error) {
+	return l.repo.ListMovimiento(ctx, id)
+}
+
+func (l *MovCapaLogica) CreateMovimientoLogic(ctx context.Context, arg db.CreateMovimientoParams) (db.Movimiento, error) {
 
 	if !MontoValido(arg.Monto) {
-		return sqlc.Movimiento{}, errors.New("el monto del movmiento no puede ser menor o igual a 0")
+		return db.Movimiento{}, errors.New("el monto del movmiento no puede ser menor o igual a 0")
 	}
 
 	if !EsFechaValida(arg.FechaMovimiento) {
-		return sqlc.Movimiento{}, errors.New("la fecha debe ser menor a la actual")
+		return db.Movimiento{}, errors.New("la fecha debe ser menor a la actual")
 	}
 
-	return l.querie.CreateMovimiento(ctx, arg)
+	return l.repo.CreateMovimiento(ctx, arg)
 }
 
-func (l *MovCapaLogica) GetMovimientoLogic(ctx context.Context, id int32) (sqlc.Movimiento, error) {
-	return l.querie.GetMovimiento(ctx, id)
+func (l *MovCapaLogica) GetMovimientoLogic(ctx context.Context, id int32) (db.Movimiento, error) {
+	return l.repo.GetMovimiento(ctx, id)
 }
 
-func (l *MovCapaLogica) UpdateMovimientoLogic(ctx context.Context, arg sqlc.UpdateMovimientoParams) (sqlc.Movimiento, error) {
+func (l *MovCapaLogica) UpdateMovimientoLogic(ctx context.Context, arg db.UpdateMovimientoParams) (db.Movimiento, error) {
 
 	if !MontoValido(arg.Monto) {
-		return sqlc.Movimiento{}, errors.New("el monto del movmiento no puede ser menor o igual a 0")
+		return db.Movimiento{}, errors.New("el monto del movmiento no puede ser menor o igual a 0")
 	}
 
 	if !EsFechaValida(arg.FechaMovimiento) {
-		return sqlc.Movimiento{}, errors.New("la fecha debe ser menor a la actual")
+		return db.Movimiento{}, errors.New("la fecha debe ser menor a la actual")
 	}
 
-	return l.querie.UpdateMovimiento(ctx, arg)
+	return l.repo.UpdateMovimiento(ctx, arg)
 }
 
 func (l *MovCapaLogica) DeleteMovimientoLogic(ctx context.Context, id int32) error {
-	return l.querie.DeleteMovimiento(ctx, id)
+	return l.repo.DeleteMovimiento(ctx, id)
 }
 
 func MontoValido(monto float64) bool {

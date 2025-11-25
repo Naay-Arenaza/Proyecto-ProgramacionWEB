@@ -17,6 +17,9 @@ templ Container(movimientos []sqlc.Movimiento) {
                 <h2 id="titulo-listado-movimientos">Listado de Movimientos</h2>
                         @MovimientoList(movimientos)
             </div> 
+            <button hx-get="/logout" class="btn-borrar">
+                    Cerrar Sesión
+            </button>
         </div>
     </main>
 }

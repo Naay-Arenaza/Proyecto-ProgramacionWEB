@@ -19,31 +19,30 @@ templ MovimientoList(movimientos []sqlc.Movimiento) {
                 for _, mov := range movimientos {
                     <div class={ "item-movimiento","movimiento-" + obtenerClase(mov.Tipo) + "-flex" }>
                         <div class="movimiento-detalles">
-                            <span class="fecha"> Fecha: { formatearFecha(mov.FechaMovimiento) }</span>
+                                <span class="fecha"> Fecha: { formatearFecha(mov.FechaMovimiento) }</span>
                             <br/>
-                            <span class="descripcion"> Descripcion: { mov.Descripcion.String }</span>
+                                <span class="descripcion"> Descripcion: { mov.Descripcion.String }</span>
                             <br/>
-                            <span class={ "monto", obtenerClase(mov.Tipo) }> 
-                                Monto: { obtenerSimbolo(mov.Tipo) }${ fmt.Sprintf("%.2f", mov.Monto) }
-                            </span>
+                                <span class={ "monto", obtenerClase(mov.Tipo) }> 
+                                    Monto: { obtenerSimbolo(mov.Tipo) }${ fmt.Sprintf("%.2f", mov.Monto) }
+                                </span>
                             <br/>
-                            <span class="gasto"> Tipo de Gasto: { obtenerTexto(mov.Tipo) }</span>
+                                <span class="gasto"> Tipo de Gasto: { obtenerTexto(mov.Tipo) }</span>
                         </div>
                         <br/>
-                           <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET" style="display:inline;">
+                            <form action={ templ.SafeURL(fmt.Sprintf("/movimientos/edit/%d", mov.IDMovimiento)) } method="GET" style="display:inline;">
                                 <button type="submit" class="btn-borrar">Editar</button>
                             </form>
-                            <form 
-                                action={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) } 
-                                method="POST" 
-                                style="display:inline;"
-                                hx-post={ templ.SafeURL(fmt.Sprintf("/movimientos/%d", mov.IDMovimiento)) }
-                                hx-target="closest .item-movimiento"
-                                hx-swap="outerHTML"
-                                hx-confirm="¿Estás seguro de que deseas eliminar este movimiento?">
-                                <input type="hidden" name="_method" value="DELETE"/> 
-                                <button type="submit" class="btn-borrar">Borrar</button> 
-                            </form>
+                            <div>
+                                <button 
+                                    hx-delete={ fmt.Sprintf("/movimientos/%d", mov.IDMovimiento) }
+                                    hx-target="closest .item-movimiento"
+                                    hx-swap="outerHTML"
+                                    hx-confirm="¿Estás seguro de que deseas eliminar este movimiento?"
+                                    class="btn-borrar">
+                                    Borrar
+                                </button>
+                            </div>
                         <br/><br/>
                     </div>
                 }

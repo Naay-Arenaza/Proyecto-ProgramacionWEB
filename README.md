@@ -17,6 +17,7 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
         - go install github.com/a-h/templ/cmd/templ@latest
           go get github.com/a-h/templ
           templ generate
+        - go install github.com/google/uuid
 
 ## Estructura del proyecto
     ProyectoFinanzas/
@@ -24,27 +25,34 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
     │   └── queries                 # Consultas SQL 
     │   │   └── movimiento.sql      # Consultas de movimientos financieros
     │   │   └── usuario.sql         # Consultas de usuarios
+    │   │   └── session.sql         # Consultas de session
     │   └── schema                  # Estructura de la base de datos
     │   │   └── schema.sql          # Script para crear tablas y relaciones
     │   └── sqlc                    # Archivos generados por sqlc para acceso a datos
     │   |   └── db.go               # Funciones de conexión y manejo de la base de datos
     │   |   └── models.go           # Modelos de datos usados en la aplicación
     │   |   └── movimiento.sql.go   # Código Go generado para movimientos
-    │   |   └── usuario.sql.Go      # Código Go generado para usuarios
+    │   |   └── usuario.sql.go      # Código Go generado para usuarios
+    │   |   └── session.sql.go      # Código Go generado para sessions
     |   └── connectDB.go            # Conexion a la BD
     ├── handlers/                   # Capa de Presentación Web 
     |   └── handlers.go             # Controladores Web 
     ├── logic/                   
     |   └── logicMov.go             # Codigo con la Logica de Negocio (movimientos)
+    |   └── logicUser.go            # Codigo con la Logica de Negocio (User y Session)
+    |   └── movimiento_repo_interface.go  # Definición de la Interfaz para acceso a datos de Movimientos
+    |   └── user_repo_interface.go        # Definición de la Interfaz para acceso a datos de Usuarios y Sessions
     ├── views/                      # Archivos estáticos para la web (HTML, CSS, JS, imágenes)
     |   └── conteiner.templ         # Contenedor Principal de la Página
     |   └── layout.templ            # Plantilla de la Página
     |   └── mod.templ               # Formulario de Modificación/Edición (update)
     |   └── movimiento_form.templ   # Formulario de Creación
     |   └── movimiento_list.templ   # Listado de Movimientos
+    |   └── SingninPage.templ       # Formulario Inicio Sesion
     ├── static/                     # Archivos Servidos Directamente
     |   └── styles.css              # Front-end estilo - Movimientos
     |   └── stylesAct.css           # Front-end estilo - Actualizacion
+    |   └── stylesLogin.css         # Front-end estilo - Login
     ├── tmp/                        # Archivos Temporales
     ├── .air.toml                   # Recarga en vivo de app
     ├── db_test.go                  # Test de operaciones CRUD
@@ -86,5 +94,5 @@ Este proyecto es un servidor web escrito en Go con el objetivo de registrar las 
     make docker/logs    --> “Muestra los logs de docker”
     make db/migrate --> “Realiza migraciones de la BD, es necesario migracion inicial y sacar inserts de ProyectoFinanzas/db/schema/schema.sql”    
     make test-Op-CRUD --> “Realiza test de operaciones CRUD queries TP2”
-    make test-Prueba-HURL --> prueba de integración de la aplicación web (Prueba el SSR/HTML, validar flujo, ...)
-    make tests --> Ejecuta test-Op-CRUD y test-Prueba-HURL
+    make test-PruebaMovAut-HURL --> prueba de integración de la aplicación web
+    make tests --> Ejecuta test-Op-CRUD y test-PruebaMovAut-HURL
