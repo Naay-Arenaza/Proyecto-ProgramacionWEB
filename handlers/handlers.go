@@ -88,17 +88,17 @@ func (h *MovimientoWebHandler) Signin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *MovimientoWebHandler) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
+func (h *MovimientoWebHandler) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc { // Verifica que la sesion este activa cada vez que se hace un cambio en la URL
 	return func(w http.ResponseWriter, r *http.Request) {
 		c, err := r.Cookie(SessionCookieName)
-		if err != nil { // No existe la cookie
+		if err != nil { // No existe la cookie (usuario no autenticado)
 			http.Redirect(w, r, "/signin", http.StatusFound) // Si la cookie no existe, redirigimos al login
 			return
 		}
 
 		sessionToken := c.Value
 
-		userSession, err := h.userLogic.GetUserSession(r.Context(), sessionToken)
+		userSession, err := h.userLogic.GetUserSession(r.Context(), sessionToken) // Se valida del token y que la sesion siga activa
 
 		if err != nil {
 			h.clearAuthCookie(w)
@@ -106,21 +106,21 @@ func (h *MovimientoWebHandler) AuthMiddleware(next http.HandlerFunc) http.Handle
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), UserIDKey, userSession.IDUsuario)
+		ctx := context.WithValue(r.Context(), UserIDKey, userSession.IDUsuario) // Guarda el IDUsuario en el contexto de la peticion
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
 
-func (h *MovimientoWebHandler) clearAuthCookie(w http.ResponseWriter) {
+func (h *MovimientoWebHandler) clearAuthCookie(w http.ResponseWriter) { //Se encarga de "cerrar la sesión" del lado del cliente invalidando la cookie.
 	http.SetCookie(w, &http.Cookie{
 		Name:     SessionCookieName,
 		Value:    "",
 		Path:     "/",
-		Expires:  time.Now().Add(-time.Hour),
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+		Expires:  time.Now().Add(-time.Hour), // Una fecha en el pasado -> Para que el navegador elimine la cookie inmediatamente.
+		HttpOnly: true,                       // Mitiga ataques XSS
+		Secure:   true,                       // Solo se envíe sobre conexiones encriptadas (HTTPS)
+		SameSite: http.SameSiteLaxMode,       // Mitigar ataques CSRF
 	})
 }
 
@@ -159,7 +159,7 @@ func (h *MovimientoWebHandler) RefreshHandler(w http.ResponseWriter, r *http.Req
 		Path:     "/",
 		Expires:  expiresAt,
 		HttpOnly: true,
-		Secure:   r.URL.Scheme == "https",
+		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	})
 
@@ -167,7 +167,7 @@ func (h *MovimientoWebHandler) RefreshHandler(w http.ResponseWriter, r *http.Req
 	w.Write([]byte("Sesión refrescada con éxito."))
 }
 
-func (h *MovimientoWebHandler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
+func (h *MovimientoWebHandler) LogoutHandler(w http.ResponseWriter, r *http.Request) { // Cerrar Sesion
 	c, err := r.Cookie(SessionCookieName)
 	if err == nil {
 		h.userLogic.DeleteUserSession(r.Context(), c.Value)
@@ -175,19 +175,36 @@ func (h *MovimientoWebHandler) LogoutHandler(w http.ResponseWriter, r *http.Requ
 
 	h.clearAuthCookie(w)
 	w.Header().Set("HX-Redirect", "/signin")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // Redirección completa a /signin
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) {
+func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *http.Request) { // Toma el movimiento a editar pedido por el Usuario
 	idStr := strings.TrimPrefix(r.URL.Path, "/movimientos/edit/")
-	id, _ := strconv.Atoi(idStr)
-
-	mov, err := h.movLogic.GetMovimientoLogic(r.Context(), int32(id))
+	movimientoID, err := strconv.Atoi(idStr)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			http.NotFound(w, r) // Si no se encuentra en la BD, devolvemos 404
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+
+	ctx := r.Context()
+
+	userID, err1 := ctx.Value(UserIDKey).(int32) // Sacamos el IDUsario del contexto de la peticion que le mandamos por el Middleware
+	if !err1 {
+		http.Redirect(w, r, "/signin", http.StatusSeeOther)
+		return
+	}
+
+	var MovArg db.GetMovimientoParams
+
+	MovArg.IDMovimiento = int32(movimientoID) // IDMovimiento de la URL
+	MovArg.IDUsuario = int32(userID)          // IDUsuario del contexto de la peticion
+
+	mov, err2 := h.movLogic.GetMovimientoLogic(r.Context(), MovArg)
+	if err2 != nil {
+		if errors.Is(err2, sql.ErrNoRows) {
+			http.NotFound(w, r) // Si no se encuentra en la BD (ya sea xq no es tu movimiento o xq no existe), devolvemos 404
 			return
 		}
 		http.Error(w, "Error interno al cargar datos", http.StatusInternalServerError)
@@ -195,32 +212,25 @@ func (h *MovimientoWebHandler) EditMovimientoHandler(w http.ResponseWriter, r *h
 	}
 
 	html := views.MovimientoEditForm(mov)
-	log.Printf("DEBUG: Cargando Movimiento ID %d, TIPO: '%s'", mov.IDMovimiento, mov.Tipo)
+	log.Printf("Cargando Movimiento ID %d, Tipo: '%s'", mov.IDMovimiento, mov.Tipo)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	html.Render(r.Context(), w)
 }
 
-func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request) {
+func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request) { // Pagina Inicial -> Formulario de CrearMovimiento y ListMovimientos del Usuario
 	if r.URL.Path != "/" || r.Method != http.MethodGet {
 		http.NotFound(w, r)
 		return
 	}
-	ctx := context.Background()
+	ctx := r.Context()
 
-	c, err := r.Cookie(SessionCookieName)
-	if err != nil {
-		http.Redirect(w, r, "/signin", http.StatusSeeOther)
-		return
-	}
-	sessionToken := c.Value
-
-	userSession, err1 := h.userLogic.GetUserSession(ctx, sessionToken)
-	if err1 != nil {
+	userID, err := ctx.Value(UserIDKey).(int32) // Sacamos el IDUsario del contexto de la peticion que le mandamos por el Middleware
+	if !err {
 		http.Redirect(w, r, "/signin", http.StatusSeeOther)
 		return
 	}
 
-	movimientos, err2 := h.movLogic.ListMovimientoLogic(ctx, userSession.IDUsuario)
+	movimientos, err2 := h.movLogic.ListMovimientoLogic(ctx, userID) // Buscamos todos los movimientos del Usuario
 
 	if err2 != nil {
 		log.Printf("Error al cargar movimientos: %v", err2)
@@ -233,7 +243,7 @@ func (h *MovimientoWebHandler) ServeForm(w http.ResponseWriter, r *http.Request)
 }
 
 // /////////////////////////////////////////////// --->  /MOVIMIENTOS
-func (q *MovimientoWebHandler) MovimientosHandler(w http.ResponseWriter, r *http.Request) {
+func (q *MovimientoWebHandler) MovimientosHandler(w http.ResponseWriter, r *http.Request) { // POST (CrearMovimiento)
 	switch r.Method {
 	case http.MethodPost:
 		q.PostMovimiento(w, r)
@@ -315,7 +325,7 @@ func (h *MovimientoWebHandler) PostMovimiento(w http.ResponseWriter, r *http.Req
 }
 
 // /////////////////////////////////////////////// --->  /MOVIMIENTO/
-func (h *MovimientoWebHandler) MovimientoHandler(w http.ResponseWriter, r *http.Request) {
+func (h *MovimientoWebHandler) MovimientoHandler(w http.ResponseWriter, r *http.Request) { // POST (UpdateMovimiento) y Delete (DeleteMov)
 	log.Printf("ID recibido: ")
 	parts := strings.Split(r.URL.Path, "/")
 	if len(parts) != 3 {
@@ -348,13 +358,20 @@ func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.R
 		http.Error(w, "Error al procesar el formulario", http.StatusBadRequest)
 		return
 	}
+
+	ctx := r.Context()
+	userID, err1 := ctx.Value(UserIDKey).(int32) // Sacamos el IDUsario del contexto de la peticion que le mandamos por el Middleware
+	if !err1 {
+		http.Redirect(w, r, "/signin", http.StatusSeeOther)
+		return
+	}
+
+	newMovimiento.IDUsuario = int32(userID)
 	newMovimiento.IDMovimiento = int32(id)
 	newMovimiento.Tipo = r.FormValue("tipo")
 	montoStr := r.FormValue("monto")
 	sanitizedStr := strings.ReplaceAll(montoStr, ",", ".")
-
 	monto, err := strconv.ParseFloat(sanitizedStr, 64)
-
 	if err != nil {
 		fmt.Printf("Error de formato: %v. El valor original era: %s\n", err, monto)
 		return
@@ -364,12 +381,10 @@ func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.R
 		return
 	}
 	newMovimiento.Monto = monto
-
 	newMovimiento.Descripcion = sql.NullString{
 		String: r.FormValue("descripcion"),
 		Valid:  r.FormValue("descripcion") != "",
 	}
-
 	fechaStr := r.FormValue("fechaMovimiento")
 	fecha, _ := time.Parse("2006-01-02", fechaStr)
 	if !logic.EsFechaValida(fecha) {
@@ -380,7 +395,7 @@ func (h *MovimientoWebHandler) updateMovimiento(w http.ResponseWriter, r *http.R
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-	h.movLogic.UpdateMovimientoLogic(r.Context(), newMovimiento)
+	h.movLogic.UpdateMovimientoLogic(ctx, newMovimiento)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

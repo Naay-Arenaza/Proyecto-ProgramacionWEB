@@ -40,8 +40,8 @@ func (l *MovCapaLogica) CreateMovimientoLogic(ctx context.Context, arg db.Create
 	return l.repo.CreateMovimiento(ctx, arg)
 }
 
-func (l *MovCapaLogica) GetMovimientoLogic(ctx context.Context, id int32) (db.Movimiento, error) {
-	return l.repo.GetMovimiento(ctx, id)
+func (l *MovCapaLogica) GetMovimientoLogic(ctx context.Context, arg db.GetMovimientoParams) (db.Movimiento, error) {
+	return l.repo.GetMovimiento(ctx, arg)
 }
 
 func (l *MovCapaLogica) UpdateMovimientoLogic(ctx context.Context, arg db.UpdateMovimientoParams) (db.Movimiento, error) {

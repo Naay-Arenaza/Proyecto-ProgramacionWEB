@@ -55,11 +55,16 @@ func (q *Queries) DeleteMovimiento(ctx context.Context, idMovimiento int32) erro
 }
 
 const getMovimiento = `-- name: GetMovimiento :one
-SELECT id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento FROM Movimiento WHERE id_movimiento = $1
+SELECT id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento FROM Movimiento WHERE id_movimiento = $1 AND id_usuario = $2
 `
 
-func (q *Queries) GetMovimiento(ctx context.Context, idMovimiento int32) (Movimiento, error) {
-	row := q.db.QueryRowContext(ctx, getMovimiento, idMovimiento)
+type GetMovimientoParams struct {
+	IDMovimiento int32 `json:"id_movimiento"`
+	IDUsuario    int32 `json:"id_usuario"`
+}
+
+func (q *Queries) GetMovimiento(ctx context.Context, arg GetMovimientoParams) (Movimiento, error) {
+	row := q.db.QueryRowContext(ctx, getMovimiento, arg.IDMovimiento, arg.IDUsuario)
 	var i Movimiento
 	err := row.Scan(
 		&i.IDMovimiento,
@@ -141,12 +146,13 @@ func (q *Queries) ListMovimientoAll(ctx context.Context) ([]Movimiento, error) {
 }
 
 const updateMovimiento = `-- name: UpdateMovimiento :one
-UPDATE Movimiento SET monto = $2, tipo = $3, descripcion = $4, fecha_movimiento = $5 WHERE id_movimiento = $1
+UPDATE Movimiento SET monto = $3, tipo = $4, descripcion = $5, fecha_movimiento = $6 WHERE id_movimiento = $1 AND id_usuario = $2
 RETURNING id_movimiento, id_usuario, monto, tipo, descripcion, fecha_movimiento
 `
 
 type UpdateMovimientoParams struct {
 	IDMovimiento    int32          `json:"id_movimiento"`
+	IDUsuario       int32          `json:"id_usuario"`
 	Monto           float64        `json:"monto"`
 	Tipo            string         `json:"tipo"`
 	Descripcion     sql.NullString `json:"descripcion"`
@@ -156,6 +162,7 @@ type UpdateMovimientoParams struct {
 func (q *Queries) UpdateMovimiento(ctx context.Context, arg UpdateMovimientoParams) (Movimiento, error) {
 	row := q.db.QueryRowContext(ctx, updateMovimiento,
 		arg.IDMovimiento,
+		arg.IDUsuario,
 		arg.Monto,
 		arg.Tipo,
 		arg.Descripcion,

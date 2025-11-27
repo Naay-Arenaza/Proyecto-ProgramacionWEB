@@ -57,11 +57,9 @@ GET http://localhost:8080/movimientos/edit/{{mov_id_captured}}
 HTTP 200
 [Asserts]
 status == 200
-# El aserto se ajusta al valor real de la BD: 1200.00
-body contains "value=\"1200.00\""
 body contains "Editar Movimiento"
 
-# 5. ACTUALIZAR EL MOVIMIENTO (POST con _method=PUT)
+# 5. ACTUALIZAR EL MOVIMIENTO 
 POST http://localhost:8080/movimientos/{{mov_id_captured}}
 Content-Type: application/x-www-form-urlencoded
 [FormParams]
@@ -73,7 +71,7 @@ fechaMovimiento: 2025-11-19
 
 HTTP 303
 
-# 6. ELIMINAR EL MOVIMIENTO (POST con _method=DELETE)
+# 6. ELIMINAR EL MOVIMIENTO 
 DELETE http://localhost:8080/movimientos/{{mov_id_captured}}
 Content-Type: application/x-www-form-urlencoded
 

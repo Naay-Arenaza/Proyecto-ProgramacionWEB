@@ -31,10 +31,10 @@ func TestQueries_CRUD(t *testing.T) {
 
 	//CreateUsuario
 	createdUser, err := queries.CreateUsuario(ctx, sqlc.CreateUsuarioParams{
-		Nombre:     "Pablo",
-		Apellido:   "Llanos",
-		Email:      "pabloLlanos1@example.com",
-		Contraseña: "12345"})
+		Nombre:     "Analia",
+		Apellido:   "Lopez",
+		Email:      "analopez@example.com",
+		Contraseña: "123"})
 
 	if err != nil {
 		log.Fatalf("Failed to create user: %v", err)
@@ -71,8 +71,13 @@ func TestQueries_CRUD(t *testing.T) {
 
 	fmt.Printf("Created movement: %+v\n", createdMov)
 
+	var MovArg sqlc.GetMovimientoParams
+
+	MovArg.IDMovimiento = createdMov.IDMovimiento
+	MovArg.IDUsuario = createdMov.IDUsuario
+
 	//GetMovimiento
-	userMov, err := queries.GetMovimiento(ctx, createdMov.IDMovimiento) // Read One
+	userMov, err := queries.GetMovimiento(ctx, MovArg) // Read One
 	if err != nil {
 		log.Fatalf("Failed to get movement: %v", err)
 	}
@@ -89,6 +94,7 @@ func TestQueries_CRUD(t *testing.T) {
 
 	_, err = queries.UpdateMovimiento(ctx, sqlc.UpdateMovimientoParams{
 		IDMovimiento: createdMov.IDMovimiento,
+		IDUsuario:    createdUser.IDUsuario,
 		Monto:        2000000.00,
 		Tipo:         "I",
 		Descripcion: sql.NullString{ // Sting que puede ser NULL
@@ -103,7 +109,7 @@ func TestQueries_CRUD(t *testing.T) {
 	}
 	fmt.Println("Usmovementer updated successfully")
 
-	updatedMov, err := queries.GetMovimiento(ctx, createdMov.IDMovimiento)
+	updatedMov, err := queries.GetMovimiento(ctx, MovArg)
 	if err != nil {
 		log.Fatalf("failed to get updated movement: %v", err)
 	}
@@ -118,7 +124,7 @@ func TestQueries_CRUD(t *testing.T) {
 
 	fmt.Println("Movement deleted successfully")
 
-	_, err = queries.GetMovimiento(ctx, createdMov.IDMovimiento)
+	_, err = queries.GetMovimiento(ctx, MovArg)
 	if err == sql.ErrNoRows {
 		fmt.Println("Movement not found after deletion")
 	} else if err != nil {

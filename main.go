@@ -34,7 +34,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 
 	http.HandleFunc("/signin", movWebHandler.Signin)
-	http.HandleFunc("/refresh", movWebHandler.AuthMiddleware(movWebHandler.RefreshHandler))
+	http.HandleFunc("/refresh", movWebHandler.RefreshHandler)
 	http.HandleFunc("/logout", movWebHandler.AuthMiddleware(movWebHandler.LogoutHandler))
 
 	http.HandleFunc("/", movWebHandler.AuthMiddleware(movWebHandler.ServeForm))
